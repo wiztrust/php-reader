@@ -1,6 +1,7 @@
 #summary The main help page for PHP-Reader.
 
 = PHP-Reader Documentation =
+By Philip Weaver
 
 == Introduction ==
 
