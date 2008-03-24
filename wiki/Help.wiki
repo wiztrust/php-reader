@@ -17,7 +17,7 @@
 
 == Use ==
 
-PHP-Reader is a modular system, you may include files as needed, for example, in order to be able to parse ID3v1 information, simply include the ID3v1.php file into your code using [http://www.php.net/manual/en/function.include-once.php include_once()] or [http://www.php.net/manual/en/function.require-once.php require_once()].
+PHP-Reader is a modular system, you may include files as needed, for example, in order to be able to parse ASF information, simply include the ASF.php file into your code using [http://www.php.net/manual/en/function.include-once.php include_once()] or [http://www.php.net/manual/en/function.require-once.php require_once()].
 
 == Examples ==
 
