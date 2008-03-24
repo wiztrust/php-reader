@@ -7,7 +7,7 @@ By Philip Weaver
 
      PHP-Reader provides a very simple and easily usable toolset to read media files and their information headers in an object-oriented manner so that they can be easily output or stepped through using iterators. It requires PHP5.
 
-== Other Help Files ==
+== Other Help Resources ==
 
   * [http://code.google.com/p/php-reader/wiki/ASF ASF Class]
   * [http://code.google.com/p/php-reader/wiki/ID3v1 ID3v1 Class]
