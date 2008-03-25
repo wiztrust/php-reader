@@ -53,7 +53,8 @@ $id3->artist = "Me!";
 $id3->album = "My Own Album";
 $id3->year = "2008";
 $id3->comment = "Commenting...";
-$id3->genre = "Rock" // or $id3->genre = 17;
-$id3->track = 5 // If you do not specify a track number, then ID3v1.0 is used.
+$id3->genre = "Rock"; // or $id3->genre = 17;
+$id3->track = 5; // If you do not specify a track number, then ID3v1.0 is used.
+$id3->write();
 ?>
 }}}
