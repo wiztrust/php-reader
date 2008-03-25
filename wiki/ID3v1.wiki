@@ -1,0 +1,81 @@
+#summary ID3v1 Specific help and documentation.
+
+= PHP-Reader ID3v1 Documentation =
+
+== Introduction ==
+
+     PHP-Reader's ID3v1 implementation is able to read any and all MPEG files containing ID3v1 information. This includes ID3v1.0 and ID3v1.1, PHP-Reader will just know which to use.
+
+== Other Help Resources ==
+  * [http://code.google.com/p/php-reader/wiki/Help Main Help Page]
+  * [http://code.google.com/p/php-reader/wiki/ID3v1FileRef ID3v1 File Reference]
+  * [http://code.google.com/p/php-reader/wiki/ID3v1FuncRef ID3v1 Function Reference]
+
+== Examples ==
+
+ID3v1 functions "just work" and the only way to show that is to see them in action:
+{{{
+<?php
+require_once("ID3v1.php");
+$id3 = new ID3v1("file.mp3");
+echo "Title: " . $id3->getTitle() . "<br />\n";
+echo "Artist: " . $id3->getArtist() . "<br />\n";
+echo "Album: " . $id3->getAlbum() . "<br />\n";
+echo "Year: " . $id3->getYear() . "<br />\n";
+echo "Comment: " . $id3->getComment() . "<br />\n";
+echo "Genre: " . $id3->getGenre() . "<br />\n";
+//And on ID3v1.1:
+echo "Track Number: " . $id3->getTrack() . "<br />\n";
+?>
+}}}
+PHP-Reader also supports shorthands for these functions as follows:
+{{{
+<?php
+require_once("ID3v1.php");
+$id3 = new ID3v1("file.mp3");
+echo "Title: " . $id3->title . "<br />\n";
+echo "Artist: " . $id3->artist . "<br />\n";
+echo "Album: " . $id3->album . "<br />\n";
+echo "Year: " . $id3->year . "<br />\n";
+echo "Comment: " . $id3->comment . "<br />\n";
+echo "Genre: " . $id3->genre . "<br />\n";
+//And on ID3v1.1:
+echo "Track Number: " . $id3->track . "<br />\n";
+?>
+}}}
+ID3v1 is the first of the PHP-Reader Classes to be able to write information back to the media file as well as read it. It even determines which version (1.1 or 1.0) would be best for you based on whether you set a track or not.
+{{{
+<?php
+require_once("ID3v2.php");
+$id3 = new ID3v2("file.mp3");
+$pic = $id3->getFramesByIdentifier("APIC");
+header("Content-Type: " . $pic->getMimeType());
+echo $pic->getData();
+?>
+}}}
+But what about outputing the picture on the same page as the rest of the information you might ask, well starting with the functions above, one could simply do the following:
+{{{
+<?php
+require_once("ID3v2.php");
+$id3 = new ID3v2("file.mp3");
+$picNum = 0;
+if ($_GET['action'] != "id3image") { // Read through file
+  foreach ($id3->getFramesByIdentifier("*") as $frame)
+    if ($frame->identifier != "APIC") { // It's not a picture, so do the normal
+      if (isset($frame->text[0]) && is_string($frame->text[0]) {
+        echo $frame->identifier . ": " . $frame->text[0] . "<br />\n";
+      } else {
+        echo $frame->identifier . ": Does not contain a string<br />\n";
+      }
+    } else { // It is a picture, so this need to be special.
+      echo $frame->identifier . ": <img src=\"filename.php?action=id3image&num=$picNum\" /><br />\n";
+      $picNum++;
+    }
+} else { // output the contents of APIC as image file.
+  $pic = $id3->getFramesByIdentifier("APIC")[$_GET['num']];
+  header("Content-Type: " . $pic->getMimeType()); // Tell the browser the mime type
+  echo $pic->getData(); // Send the browser the data.
+}
+?>
+}}}
+and there you go! That will output all the information, including the picture, on a single page.
