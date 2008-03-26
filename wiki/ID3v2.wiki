@@ -7,6 +7,7 @@
      PHP-Reader's ID3v2 implementation is able to read any and all MPEG files containing ID3v2.4 information. This is the newest version of the ID3 standard, as it is defined by ID3.org. PHP-Reader can ONLY reader ID3v2 or the 2.4 kind, it can NOT read ID3v2.3 or 2.2 etc... This is due to a fundamental difference in the way in which size information is stored between the 2.
 
 == Other Help Resources ==
+
   * [http://code.google.com/p/php-reader/wiki/Help Main Help Page]
   * [http://code.google.com/p/php-reader/wiki/ID3v2FileRef ID3v2 File Reference]
   * [http://code.google.com/p/php-reader/wiki/ID3v2FuncRef ID3v2 Function Reference]
@@ -20,7 +21,6 @@ require_once("ID3v2.php");
 $id3 = new ID3v2("file.mp3");
 $talb = $id3->getFramesByIdentifier("TALB")->text[0];
 echo "Album: " . $talb;
-?>
 }}}
 However, more often then not, there is not just one single piece of information that you would like to output, but rather, you would like to output as much information as possible.
 {{{
@@ -33,7 +33,6 @@ foreach ($id3->getFramesByIdentifier("*") as $frame)
   } else {
     echo $frame->identifier . ": Does not contain a string<br />\n";
   }
-?>
 }}}
 ID3v2 can also contain images you might say, well those can be read out too:
 {{{
@@ -43,7 +42,6 @@ $id3 = new ID3v2("file.mp3");
 $pic = $id3->getFramesByIdentifier("APIC");
 header("Content-Type: " . $pic->getMimeType());
 echo $pic->getData();
-?>
 }}}
 But what about outputing the picture on the same page as the rest of the information you might ask, well starting with the functions above, one could simply do the following:
 {{{
@@ -68,7 +66,6 @@ if ($_GET['action'] != "id3image") { // Read through file
   header("Content-Type: " . $pic->getMimeType()); // Tell the browser the mime type
   echo $pic->getData(); // Send the browser the data.
 }
-?>
 }}}
 Notice the use of "$frame instanceof ID3_Frame_AbstractText" this method allows you to test to see if an ID3 frame contains Text or not. This is a built in method which avoids you the need to use things like "isset($frame->text[0]) && is_string($frame->text[0]"
 
