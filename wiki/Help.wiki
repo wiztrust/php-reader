@@ -13,8 +13,6 @@ By Philip Weaver
   * [http://code.google.com/p/php-reader/wiki/ASF ASF Class]
   * [http://code.google.com/p/php-reader/wiki/ID3v1 ID3v1 Class]
   * [http://code.google.com/p/php-reader/wiki/ID3v2 ID3v2 Class]
-  * [http://code.google.com/p/php-reader/wiki/FileRef File Reference]
-  * [http://code.google.com/p/php-reader/wiki/FuncRef Function Reference]
   * [http://code.google.com/p/php-reader/issues/list Upcoming Functions (to-do)]
 
 == Use ==
