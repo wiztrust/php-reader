@@ -7,6 +7,7 @@
      PHP-Reader's ID3v1 implementation is able to read any and all MPEG files containing ID3v1 information. This includes ID3v1.0 and ID3v1.1, PHP-Reader will just know which to use.
 
 == Other Help Resources ==
+
   * [http://code.google.com/p/php-reader/wiki/Help Main Help Page]
   * [http://code.google.com/p/php-reader/wiki/ID3v1FileRef ID3v1 File Reference]
   * [http://code.google.com/p/php-reader/wiki/ID3v1FuncRef ID3v1 Function Reference]
@@ -26,7 +27,6 @@ echo "Comment: " . $id3->getComment() . "<br />\n";
 echo "Genre: " . $id3->getGenre() . "<br />\n";
 //And on ID3v1.1:
 echo "Track Number: " . $id3->getTrack() . "<br />\n";
-?>
 }}}
 PHP-Reader also supports shorthands for these functions as follows:
 {{{
@@ -41,7 +41,6 @@ echo "Comment: " . $id3->comment . "<br />\n";
 echo "Genre: " . $id3->genre . "<br />\n";
 //And on ID3v1.1:
 echo "Track Number: " . $id3->track . "<br />\n";
-?>
 }}}
 ID3v1 is the first of the PHP-Reader Classes to be able to write information back to the media file as well as read it. It even determines which version (1.1 or 1.0) would be best for you based on whether you set a track or not.
 {{{
@@ -56,6 +55,5 @@ $id3->comment = "Commenting...";
 $id3->genre = "Rock"; // or $id3->genre = 17;
 $id3->track = 5; // If you do not specify a track number, then ID3v1.0 is used.
 $id3->write();
-?>
 }}}
 As you can see from above, not only does PHP-Reader let you easily read and write data from your ID3v1 Tagged files, but it even automatically handles ID3v1 genre tags for you so that you may choose to enter the genre as a string or as a number. All 80 ID3v1 standard genres are available in this manner as well as the first 46 of the winamp extension genres (from 0 to 125). These genres are considered the ID3v1.1 standard.
