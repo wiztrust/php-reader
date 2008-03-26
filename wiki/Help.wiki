@@ -1,4 +1,5 @@
 #summary The main help page for PHP-Reader.
+#labels Featured
 
 = PHP-Reader Documentation =
 By Philip Weaver
