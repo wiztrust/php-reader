@@ -73,4 +73,4 @@ $id3->genre = "Rock"; // or $id3->genre = 17;
 $id3->track = 5; // If you do not specify a track number, then ID3v1.0 is used.
 $id3->write();
 }}}
-As you can see from above, not only does PHP-Reader let you easily read and write data from your ID3v1 Tagged files, but it even automatically handles ID3v1 genre tags for you so that you may choose to enter the [http://code.google.com/p/php-reader/wiki/ID3v1GenreList genre] as a string or as a number. All 80 ID3v1 standard genres are available (Genres 0-79) in this manner as well as the first 46 of the winamp extension genres (Genres 80 to 125). These genres are considered the ID3v1.1 standard.
+As you can see from above, not only does PHP-Reader let you easily read and write data from your ID3v1 Tagged files, but it even automatically handles ID3v1 genre tags for you so that you may choose to enter the [http://code.google.com/p/php-reader/wiki/ID3v1GenreList genre] as a string or as a number. All 80 ID3v1 standard genres are available (Genres 0 to 79) in this manner as well as the first 46 of the winamp extension genres (Genres 80 to 125). These genres are considered the ID3v1.1 standard.
