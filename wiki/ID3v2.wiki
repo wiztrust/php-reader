@@ -29,7 +29,7 @@
 
 == Examples ==
 
-=== Example #1: How to read ID3v2 by identifier information ===
+=== Example #1: How to read ID3v2 by identifier ===
 
 The simplest way to use the ID3v2 functions is to have them get a specific frame by it's identifier and then output that frame.
 {{{
