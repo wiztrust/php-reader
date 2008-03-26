@@ -12,7 +12,24 @@
   * [http://code.google.com/p/php-reader/wiki/ASF ASF Help Page]
   * [http://code.google.com/p/php-reader/wiki/ID3v1 ID3v1 Help Page]
 
+== Class Information ==
+   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
+   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3v2.php
+   * _Requires:_
+      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
+      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Exception.php
+      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Header.php
+      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/ExtendedHeader.php
+      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Frame.php
+      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Object.php
+      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Transform.php
+      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader/Exception.php
+   * _May Require:_
+      * anything in the "<[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Frame/" folder.
+
 == Examples ==
+
+=== Example #1: How to read ID3v2 by identifier information ===
 
 The simplest way to use the ID3v2 functions is to have them get a specific frame by it's identifier and then output that frame.
 {{{
@@ -22,6 +39,9 @@ $id3 = new ID3v2("file.mp3");
 $talb = $id3->getFramesByIdentifier("TALB")->text[0];
 echo "Album: " . $talb;
 }}}
+
+=== Example #2: How to read all ID3v2 text information ===
+
 However, more often then not, there is not just one single piece of information that you would like to output, but rather, you would like to output as much information as possible.
 {{{
 <?php
@@ -34,15 +54,21 @@ foreach ($id3->getFramesByIdentifier("*") as $frame)
     echo $frame->identifier . ": Does not contain a string<br />\n";
   }
 }}}
+
+=== Example #3: How to read an ID3v2 Image ===
+
 ID3v2 can also contain images you might say, well those can be read out too:
 {{{
 <?php
 require_once("ID3v2.php");
 $id3 = new ID3v2("file.mp3");
-$pic = $id3->getFramesByIdentifier("APIC");
+$pic = $id3->getFramesByIdentifier("APIC")[0];
 header("Content-Type: " . $pic->getMimeType());
 echo $pic->getData();
 }}}
+
+=== Example #4: How to read out all ID3v2 Information on a single page ===
+
 But what about outputing the picture on the same page as the rest of the information you might ask, well starting with the functions above, one could simply do the following:
 {{{
 <?php
