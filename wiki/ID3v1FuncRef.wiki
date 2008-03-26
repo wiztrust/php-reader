@@ -1,0 +1,73 @@
+#summary Function/Class Reference for ID3v1.
+
+= PHP-Reader ID3v1 Function Reference =
+
+== Introduction ==
+
+     PHP-Reader's ID3v1 implementation is ID3v1.0 and ID3v1.1 standards compliant. This is a reference of the built in items specifically for ID3v1. For a full function reference please use the Main Function Reference Page.
+
+== Other Help Resources ==
+
+  * [http://code.google.com/p/php-reader/wiki/Help Main Help Page]
+  * [http://code.google.com/p/php-reader/wiki/FuncRef Main Function Reference]
+  * [http://code.google.com/p/php-reader/wiki/ID3v1 ID3v1 Help Page]
+  * [http://code.google.com/p/php-reader/wiki/ID3v1FileRef ID3v1 File Reference]
+
+== Class/Function Reference ==
+
+=== Class: ID3v1 ===
+   * _Source location:_ /ID3v1.php
+   * _Author:_ Sven Vollbehr <sven.vollbehr@behrss.eu>
+   * _Requires:_
+      * /Reader.php
+      * /Transform.php
+      * /Reader/Exception.php
+----
+*Class Variables:*
+   * static $genres = array ([http://code.google.com/p/php-reader/wiki/ID3v1GenreList Genre List])
+      * Access: Public.
+      * Description: genre list.
+----
+*Class Methods:*
+   * constructor `__construct (string $filename)`
+      * Access: Public.
+      * Description: Constructs the ID3v1 class with given file.
+      * Parameters: string $filename The file name of the media file.
+
+   * method `getAlbum ()`
+      * Access: Public.
+      * Description: Returns string containing the album field.
+
+   * method `getArtist ()`
+      * Access: Public.
+      * Description: Returns string containing the artist field.
+
+   * method `getComment ()`
+      * Access: Public.
+      * Description: Returns string containing the comment field.
+
+   * method `getGenre ()`
+      * Access: Public.
+      * Description: Returns string containing the genre field as read from [http://code.google.com/p/php-reader/wiki/ID3v1GenreList the genre list].
+
+   * method `getTitle ()`
+      * Access: Public.
+      * Description: Returns string containing the title field.
+
+   * method `getTrack ()`
+      * Access: Public.
+      * Description: Returns integer containing the track field.
+      * Since: ID3v1.1.
+
+   * method `getYear ()`
+      * Access: Public.
+      * Description: Returns string containing the year field.
+
+   * method `write ()`
+      * Access: Public.
+      * Description: Writes current data back to media file.
+
+   * method `__get (string $name)`
+      * Access: Public.
+      * Description: Magic function so that $obj->value will work.
+      * Parameters: string $name The field name.
