@@ -23,7 +23,7 @@
 
 == Examples ==
 
-=== Example #1: How to read ID3v1 information ===
+*Example #1: How to read ID3v1 information*
 
 ID3v1 functions "just work" and the only way to show that is to see them in action:
 {{{
@@ -40,7 +40,7 @@ echo "Genre: " . $id3->getGenre() . "<br />\n";
 echo "Track Number: " . $id3->getTrack() . "<br />\n";
 }}}
 
-=== Example #2: Using PHP-Reader shorthand ===
+*Example #2: Using PHP-Reader shorthand*
 
 PHP-Reader also supports shorthands for these functions as follows:
 {{{
@@ -57,7 +57,7 @@ echo "Genre: " . $id3->genre . "<br />\n";
 echo "Track Number: " . $id3->track . "<br />\n";
 }}}
 
-=== Example #3: How to update existing ID3v1 information ===
+*Example #3: How to update existing ID3v1 information*
 
 ID3v1 is the first of the PHP-Reader Classes to be able to write information back to the media file as well as read it. It even determines which version (1.1 or 1.0) would be best for you based on whether you set a track or not.
 {{{
