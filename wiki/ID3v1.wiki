@@ -13,7 +13,7 @@
   * [http://code.google.com/p/php-reader/wiki/ID3v2 ID3v2 Help Page]
 
 
-== Class Information ==
+== Class API Information ==
    * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/php-reader/ID3/ID3v1.html
    * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3v1.php
    * _Author:_ Sven Vollbehr <sven.vollbehr@behrss.eu>
