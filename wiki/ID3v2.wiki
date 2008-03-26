@@ -9,8 +9,8 @@
 == Other Help Resources ==
 
   * [http://code.google.com/p/php-reader/wiki/Help Main Help Page]
-  * [http://code.google.com/p/php-reader/wiki/ID3v2FileRef ID3v2 File Reference]
-  * [http://code.google.com/p/php-reader/wiki/ID3v2FuncRef ID3v2 Function Reference]
+  * [http://code.google.com/p/php-reader/wiki/ID3v1 ID3v1 Help Page]
+  * [http://code.google.com/p/php-reader/wiki/ASF Help Page]
 
 == Examples ==
 
