@@ -13,6 +13,16 @@
   * [http://code.google.com/p/php-reader/wiki/ID3v2 ID3v2 Help Page]
   * [http://code.google.com/p/php-reader/wiki/ID3v1 ID3v1 Function Refrence]
 
+
+== Class Information ==
+   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/php-reader/ID3/ID3v1.html
+   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3v1.php
+   * _Author:_ Sven Vollbehr <sven.vollbehr@behrss.eu>
+   * _Requires:_
+      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
+      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Transform.php
+      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader/Exception.php
+
 == Examples ==
 
 ID3v1 functions "just work" and the only way to show that is to see them in action:
