@@ -14,7 +14,7 @@
 
 
 == Class Information ==
-   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/php-reader/ID3/ID3v1.html
+   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
    * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3v1.php
    * _Requires:_
       * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
