@@ -16,8 +16,8 @@
 == Class/Function Reference ==
 
 === Class: ID3v1 ===
-   * _Documentation location:_ /docs/php-reader/ID3/ID3v1.html
-   * _Source location:_ /ID3v1.php
+   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/php-reader/ID3/ID3v1.html
+   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3v1.php
    * _Author:_ Sven Vollbehr <sven.vollbehr@behrss.eu>
    * _Requires:_
       * /Reader.php
