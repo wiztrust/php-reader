@@ -1,51 +1,30 @@
-#summary The main help page for PHP-Reader.
-#labels Featured
+#summary The Programmer's Reference Guide
+#labels Featured,Phase-Implementation
 
-= PHP-Reader Documentation =
-By Philip Weaver
+=PHP-Reader Documentation=
+By [http://code.google.com/u/wphilipw/ wphilipw], [http://code.google.com/u/svollbehr/ svollbehr]
 
-== Introduction ==
+==Table of Contents==
+  * *Introduction*
+  * [ASF] Class
+  * [ID3v1] Class
+  * [ID3v2] Class
 
-     PHP-Reader provides a very simple and easily usable toolset to read media files and their information headers in an object-oriented manner so that they can be easily output or stepped through using iterators. It requires PHP5.
+  * _[http://code.google.com/p/php-reader/issues/list Issues]_
 
-== Other Help Resources ==
+==Introduction==
+PHP-Reader is a high quality and open source library providing a very simple and intuitive toolset to read files and their information headers.
+ 
+This documentation contains information that a developer needs to comprehend and use each library component.
 
-  * [http://code.google.com/p/php-reader/wiki/ASF ASF Class]
-  * [http://code.google.com/p/php-reader/wiki/ID3v1 ID3v1 Class]
-  * [http://code.google.com/p/php-reader/wiki/ID3v2 ID3v2 Class]
-  * [http://code.google.com/p/php-reader/issues/list Upcoming Functions (to-do)]
+==Installation==
+PHP-Reader is built with object-oriented PHP 5 and thus requires PHP version 5 or later.
 
-== Use ==
+Once an appropriate PHP environment is available, your next step is to get a copy of the library. You may obtain the copy by downloading the [http://code.google.com/p/php-reader/downloads/list latest release] available in both `.zip` and `.tar.bz2` formats.
 
-PHP-Reader is a modular system, you may include files as needed, for example, in order to be able to parse ASF information, simply include the ASF.php file into your code using [http://www.php.net/manual/en/function.include-once.php include_once()] or [http://www.php.net/manual/en/function.require-once.php require_once()].
+Once you have the copy, you must make the library available to your application. Though there are [http://www.php.net/manual/en/configuration.changes.php several ways to achieve this], your PHP [http://www.php.net/manual/en/ini.core.php#ini.include-path include_path] needs to contain the path to the library.
 
-== Examples ==
+Since all the components are rather loosely coupled, various components may be selected for independent use as needed. Each class' documentation will give you the minimum setting.
 
-The power and simplicity of PHP-Reader appear very quickly when it interacts with a media file:
-{{{
-<?php
-require_once("ID3v1.php");
-$id3 = new ID3v1("file.mp3");
-echo "Title: " . $id3->title;
-}}}
-PHP-Reader was built to enable access to as many different media files as possible through as easy an interface as possible for that media, while also maintaining power and flexibility. This can be seen easily through the way in which you can easily step through every tag present in your file.
-{{{
-<?php
-require_once("ID3v2.php");
-$id3 = new ID3v2("file.mp3");
-foreach ($id3->getFramesByIdentifier("T*") as $frame)
-  echo $frame->identifier . ": " . $frame->text[0] . "<br />\n";
-}}}
-PHP-Reader goes beyond what it's name implies. It is not only able to read Tags, but can also write them. with the ID3v1 writing information into an MP3 file through PHP is as easy as ever, all you need to do is load the file, tell it what information you want where, and then tell it to write that information.
-{{{
-<?php
-require_once("ID3v1.php");
-$id3 = new ID3v1("file.mp3");
-$id3->title = "{$id3->title} by me!";
-$id3->album = "My album";
-$id3->write();
-}}}
-
-== License ==
-
-PHP-Reader is [http://code.google.com/p/php-reader/wiki/License licensed] to you (the user) under the new BSD License.
+==License==
+PHP-Reader is licensed to you under the [License New BSD License].
