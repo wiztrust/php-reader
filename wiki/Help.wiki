@@ -1,5 +1,5 @@
 #summary The Programmer's Reference Guide
-#labels Featured,Phase-Implementation
+#labels Featured,Phase-Requirements,Phase-Implementation
 
 =PHP-Reader Documentation=
 By [http://code.google.com/u/wphilipw/ wphilipw], [http://code.google.com/u/svollbehr/ svollbehr]
