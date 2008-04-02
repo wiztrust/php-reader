@@ -1,0 +1,49 @@
+#summary The Programmer's Reference Guide: ASF Class
+#labels Phase-Implementation
+
+=PHP-Reader Documentation: ASF Class=
+By [http://code.google.com/u/wphilipw/ wphilipw], [http://code.google.com/u/svollbehr/ svollbehr]
+
+==Introduction==
+The `ASF` class is a partial implementation of the Advanced Systems Format (ASF) standard. ASF is a file format that can contain various types of information ranging from audio (Windows Media Audio, WMA) and video (Windows Media Video, WMV) to script commands and developer defined custom streams. The `ASF` class is capable of reading the file information headers.
+
+==Table of Contents==
+  * [Help Introduction]
+  * *`ASF` Class*
+  * [ID3v1] Class
+  * [ID3v2] Class
+
+  * _[http://code.google.com/p/php-reader/issues/list Issues]_
+
+==Class Information==
+  * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
+  * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ASF.php
+  * _Requirements:_
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader/Exception.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ASF/
+
+==Examples==
+
+===Example #1: How to read ASF information===
+
+{{{
+<?php
+require_once("ASF.php");
+
+$asf = new ASF("file.(asf|wma|wmv)");
+if ($obj = $asf->nextObject()) {                      // get the header object
+  while ($obj->hasChildObjects()) {
+    $child = $obj->nextChildObject();
+    if ($child instanceof ASF_ContentDescriptionObject) {
+      $val = $child->getTitle();                      // or getAuthor, getDescription, ...
+    }
+    if ($child instanceof ASF_ExtendedContentDescriptionObject) {
+      $val = $child->getDescriptor("WM/AlbumTitle");  // or WM/Genre, WM/Year, ...
+    }
+    if ($child instanceof ASF_FilePropertiesObject) {
+      $val = $child->getFileSize();                   // or getPlayDuration, ...
+    }
+  }
+}
+}}}
