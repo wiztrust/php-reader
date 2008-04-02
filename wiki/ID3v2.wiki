@@ -1,98 +1,156 @@
-#summary ID3v2 Specific help and documentation.
+#summary The Programmer's Reference Guide: ID3v2 Class
+#labels Phase-Implementation
 
-= PHP-Reader ID3v2 Documentation =
+=PHP-Reader Documentation: ID3v2 Class=
+By [http://code.google.com/u/wphilipw/ wphilipw], [http://code.google.com/u/svollbehr/ svollbehr]
 
-== Introduction ==
+==Introduction==
+The `ID3v2` class provides a fully standards compliant implementation of the ID3v2.4.0 standard as defined by [http://www.id3.org/ ID3.org]. The ID3 tag can be used with various files including MPEG Layer III, or MP3 files. The class is capable of both reading and writing tag information.
 
-     PHP-Reader's ID3v2 implementation is able to read any and all MPEG files containing ID3v2.4 information. This is the newest version of the ID3 standard, as it is defined by ID3.org. PHP-Reader can ONLY reader ID3v2 or the 2.4 kind, it can NOT read ID3v2.3 or 2.2 etc... This is due to a fundamental difference in the way in which size information is stored between the 2.
+Albeit the ID3v2.4.0 is the newest standard, the previous version ID3v2.3.0 is also quite popular. Unfortunately this version is not fully supported by the class due to a fundamental difference between the two. However, support for this is being developed. Please see the repository for the latest snapshot.
 
-== Other Help Resources ==
+==Table of Contents==
+  * [Help Introduction]
+  * [ASF] Class
+  * [ID3v1] Class
+  * *`ID3v2` Class*
 
-  * [http://code.google.com/p/php-reader/wiki/Help Main Help Page]
-  * [http://code.google.com/p/php-reader/wiki/ASF ASF Help Page]
-  * [http://code.google.com/p/php-reader/wiki/ID3v1 ID3v1 Help Page]
+  * _[http://code.google.com/p/php-reader/issues/list Issues]_
 
-== Class Information ==
-   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
-   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3v2.php
-   * _Requires:_
-      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
-      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Exception.php
-      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Header.php
-      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/ExtendedHeader.php
-      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Frame.php
-      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Object.php
-      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Transform.php
-      * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader/Exception.php
-   * _May Require:_
-      * anything in the "<[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Frame/" folder.
+==Class Information==
+  * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
+  * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3v2.php
+  * _Requirements:_
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader/Exception.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Transform.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Object.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Frame.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Header.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/ExtendedHeader.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Exception.php
+  * _Optional:_
+    * Any class file under <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Frame/ folder
 
-== Examples ==
+==Examples==
 
-=== Example #1: How to read ID3v2 by identifier ===
+===Example #1: How to read ID3v2 information===
+The simplest way to use the `ID3v2` class is to have it get a specific frame by its identifier.
 
-The simplest way to use the ID3v2 functions is to have them get a specific frame by it's identifier and then output that frame.
 {{{
 <?php
 require_once("ID3v2.php");
+
 $id3 = new ID3v2("file.mp3");
-$talb = $id3->getFramesByIdentifier("TALB")->text[0];
-echo "Album: " . $talb;
+$frame = $id3->getFramesByIdentifier("TIT2"); // for song title; or TALB for album title; ..
+$title = $frame[0]->getText();
+
+$frame = $id3->getFramesByIdentifier("APIC"); // for attached picture
+$image = $frame[0]->getImageType();
 }}}
 
-=== Example #2: How to read all ID3v2 text information ===
+As already so familiar from the [ID3v1] class, the class also supports shorthands for retrieving and assigning frames and their fields. The above code could also be written as shown below.
 
-However, more often then not, there is not just one single piece of information that you would like to output, but rather, you would like to output as much information as possible.
 {{{
 <?php
 require_once("ID3v2.php");
+
 $id3 = new ID3v2("file.mp3");
-foreach ($id3->getFramesByIdentifier("*") as $frame)
-  if (isset($frame->text[0]) && is_string($frame->text[0]) {
-    echo $frame->identifier . ": " . $frame->text[0] . "<br />\n";
-  } else {
-    echo $frame->identifier . ": Does not contain a string<br />\n";
-  }
+
+$title = $id3->tit2->text;                    // contains the first song title; or talb->text for album title; ...
+$image = $id3->apic->imageType;               // contains the first attached picture type
 }}}
 
-=== Example #3: How to read an ID3v2 Image ===
+===Example #2: Other ways to read ID3v2 information===
+As the most common reason to read ID3 tags is to get the song information, it is often sufficient to get out just the textual information of an ID3v2 tag. This can easily be done with just a few lines of code by using tag selector as shown below.
 
-ID3v2 can also contain images you might say, well those can be read out too:
 {{{
 <?php
 require_once("ID3v2.php");
+
 $id3 = new ID3v2("file.mp3");
-$pic = $id3->getFramesByIdentifier("APIC")[0];
-header("Content-Type: " . $pic->getMimeType());
-echo $pic->getData();
+$id3info = array()
+foreach ($id3->getFramesByIdentifier("T*") as $frame)
+  $id3info[$frame->identifier] = $frame->text;
+
+print_r($id3info); // will print all textual information found from the tag
 }}}
 
-=== Example #4: How to read out all ID3v2 Information on a single page ===
+However, more often than not, there is not just one single piece of information that you would like to output, but rather, you would like to output as much information as possible. You can loop through all the frames and create custom output for individual frame types as shown in the example below.
 
-But what about outputing the picture on the same page as the rest of the information you might ask, well starting with the functions above, one could simply do the following:
 {{{
 <?php
 require_once("ID3v2.php");
+
 $id3 = new ID3v2("file.mp3");
-$picNum = 0;
-if ($_GET['action'] != "id3image") { // Read through file
-  foreach ($id3->getFramesByIdentifier("*") as $frame)
-    if ($frame->identifier != "APIC") { // It's not a picture, so do the normal
-      if ($frame instanceof ID3_Frame_AbstractText) {
-        echo $frame->identifier . ": " . $frame->text[0] . "<br />\n";
-      } else {
-        echo $frame->identifier . ": Does not contain a string<br />\n";
-      }
-    } else { // It is a picture, so this need to be special.
-      echo $frame->identifier . ": <img src=\"filename.php?action=id3image&num=$picNum\" /><br />\n";
-      $picNum++;
-    }
-} else { // output the contents of APIC as image file.
-  $pic = $id3->getFramesByIdentifier("APIC")[$_GET['num']];
-  header("Content-Type: " . $pic->getMimeType()); // Tell the browser the mime type
-  echo $pic->getData(); // Send the browser the data.
+foreach ($id3->frames as $frames) {
+  if ($frames[0] instanceof ID3_Frame_AbstractText)
+    echo $frames[0]->identifier . ": " . $frames[0]->text . "\n";
+  if ($frames[0] instanceof ID3_Frame_AbstractLink)
+    echo $frames[0]->identifier . ": " . $frames[0]->link . "\n";
+  if ($frames[0] instanceof ID3_Frame_APIC)
+    echo $frames[0]->identifier . ": " . $frames[0]->imageType . "\n";
+
+  // etc..
 }
 }}}
-Notice the use of "$frame instanceof ID3_Frame_AbstractText" this method allows you to test to see if an ID3 frame contains Text or not. This is a built in method which avoids you the need to use things like "isset($frame->text[0]) && is_string($frame->text[0]"
 
-and there you go, that is all you need to get started using PHP-Reader's ID3v2.
+===Example #3: How to write ID3v2 information===
+Writing an ID3v2 tag is no harder than writing an [ID3v1] tag. One may simply create an instance of the class, assign needed values and commit the changes.
+
+{{{
+<?php
+require_once("ID3v2.php");
+
+$id3 = new ID3v2();
+
+$tit2 = new ID3_Frame_TIT2();
+$tit2->setText("My song title");
+$id3->addFrame($tit2);
+
+$id3->write("file.mp3");
+}}}
+
+It is also possible to read current tag content, alter it and then rewrite it back to the media file.
+
+{{{
+<?php
+require_once("ID3v2.php");
+
+$id3 = new ID3v2("file.mp3");
+
+$id3->getFramesByIdentifier("TIT2")[0]->setText
+  ($id3->getFramesByIdentifier("TIT2")[0]->getText() . " by me!"); // append something to the title
+
+$talb = new ID3_Frame_TALB();
+$talb = "My album";
+$id3->addFrame($talb);
+
+$id3->write();
+}}}
+
+Similarly to when you read the tag information, you can also use the class shorthands to assign the information. The above code can also be written as follows.
+
+{{{
+<?php
+require_once("ID3v2.php");
+
+$id3 = new ID3v2("file.mp3");
+$id3->tit2->text = "{$id3->tit2->text} by me!"; // append something to the title
+$id3->talb->text = "My album";
+$id3->write();
+}}}
+
+===Example #4: Case study: How to display album cover image===
+ID3v2 can also contain images you might say. Well, there is a way to read them.
+
+{{{
+<?php
+require_once("ID3v2.php");
+
+$id3 = new ID3v2("file.mp3");
+header("Content-Type: " . $id3->apic->mimeType);
+echo $id3->apic->data;
+}}}
+
+No harder than that! See the class documentation found in the source package for the documentation for all the available tag frames and their fields.
