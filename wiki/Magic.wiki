@@ -11,6 +11,12 @@ Although this method is significantly slower than determining the type by file s
 
 ==Table of Contents==
   * [Help Introduction]
+  * [ASF] Class
+  * [ID3v1] Class
+  * [ID3v2] Class
+  * *`Magic` Class*
+
+  * _[http://code.google.com/p/php-reader/issues/list Issues]_
 
 ==Class Information==
   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
