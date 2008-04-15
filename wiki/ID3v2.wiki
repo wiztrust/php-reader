@@ -5,9 +5,7 @@
 By [http://code.google.com/u/wphilipw/ wphilipw], [http://code.google.com/u/svollbehr/ svollbehr]
 
 ==Introduction==
-The `ID3v2` class provides a fully standards compliant implementation of the ID3v2.4.0 standard as defined by [http://www.id3.org/ ID3.org]. The ID3 tag can be used with various files including MPEG Layer III, or MP3 files. The class is capable of both reading and writing tag information.
-
-Albeit the ID3v2.4.0 is the newest standard, the previous version ID3v2.3.0 is also quite popular. Unfortunately this version is not fully supported by the class due to a fundamental difference between the two. However, support for this is being developed. Please see the repository for the latest snapshot.
+The `ID3v2` class provides a fully standards compliant implementation of the ID3v2.3.0 and ID3v2.4.0 standards as defined by [http://www.id3.org/ ID3.org]. The ID3 tag can be used with various files including MPEG Layer III, or MP3 files. The class is capable of both reading and writing tag information.
 
 ==Table of Contents==
   * [Help Introduction]
@@ -153,4 +151,29 @@ header("Content-Type: " . $id3->apic->mimeType);
 echo $id3->apic->data;
 }}}
 
-No harder than that! See the class documentation found in the source package for the documentation for all the available tag frames and their fields.
+No harder than that!
+
+===Example #5: Version juggling===
+By default, the `ID3v2` class recognizes the version of the standard used to write the tag. When you write a new tag, the class defaults to the newest version 4.0. You can change this behaviour by giving an options array to the constructor as shown below.
+
+{{{
+<?php
+require_once("ID3v2.php");
+
+$id3 = new ID3v2(array("version" => 3.0));
+$id3->tyer->text = "2000";
+$id3->write();   // writes ID3v2.3.0 compliant tag
+}}}
+
+It is also possible to change the version information on a read tag. However, you must be carefull not to leave any deprecated or unsupported frames to the tag.
+
+{{{
+<?php
+require_once("ID3v2.php");
+
+$id3 = new ID3v2("file.mp3");          // read  ID3v2.4.0 by default
+$id3->getHeader()->setVersion(3.0);
+$id3->write();                         // write ID3v2.3.0
+}}}
+
+See the class documentation found in the source package for the documentation for all the available tag frames and their fields.
