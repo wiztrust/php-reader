@@ -12,6 +12,7 @@ The `ASF` class is a partial implementation of the Advanced Systems Format (ASF)
   * *`ASF` Class*
   * [ID3v1] Class
   * [ID3v2] Class
+  * [Magic] Class
 
   * _[http://code.google.com/p/php-reader/issues/list Issues]_
 
