@@ -25,7 +25,7 @@ The `ID3v2` class provides a fully standards compliant implementation of the ID3
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Object.php
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Frame.php
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Header.php
-    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/ExtendedHeader.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/!ExtendedHeader.php
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Exception.php
   * _Optional:_
     * Any class file under <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3/Frame/ folder
