@@ -12,7 +12,7 @@ The `ID3v2` class provides *a full implementation* of the ID3v2.3.0 and ID3v2.4.
   * [ASF] Class
   * [ID3v1] Class
   * *`ID3v2` Class*
-  * [ISO14496] Class*
+  * [ISO14496] Class
   * [Magic] Class
 
   * _[http://code.google.com/p/php-reader/issues/list?q=label:ID3v2 Issues]_

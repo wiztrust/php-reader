@@ -11,13 +11,13 @@ The ISO Base Media File Format is designed to contain timed media information fo
 
 The file structure is object-oriented; a file can be decomposed into constituent objects very simply, and the structure of the objects inferred directly from their type. The file format is designed to be independent of any particular network protocol while enabling efficient support for them in general.
 
-The ISO Base Media File Format is a base format for media file formats such as Apple QuickTime, Apple iTunes AAC, and MPEG-4 Video. The class is capable of parsing all the file information.
+The ISO Base Media File Format is a base format for media file formats such as Apple !QuickTime, Apple iTunes AAC, and MPEG-4 Video. The class is capable of parsing all the file information.
 
 ==Table of Contents==
   * [Help Introduction]
   * [ASF] Class
   * [ID3v1] Class
-  * [ID3v2] Class*
+  * [ID3v2] Class
   * *`ISO14496` Class*
   * [Magic] Class
 
@@ -93,7 +93,7 @@ User data objects shall be placed only in Movie or Track Boxes, and objects usin
 || || || subs || || || || _Sub-Sample Information Box_ ||
 || mfra || || || || || || _Movie Fragment Random Access Box_ ||
 || || tfra || || || || || _Track Fragment Random Access Box_ ||
-|| || *mfro* || || || || || || _Movie Fragment Random Access Offset Box_ ||
+|| || *mfro* || || || || || _Movie Fragment Random Access Offset Box_ ||
 || mdat || || || || || || _Media Data Box_ ||
 || free || || || || || || _Free Space Box_ ||
 || skip || || || || || || _Free Space Box_ ||
@@ -120,11 +120,11 @@ User data objects shall be placed only in Movie or Track Boxes, and objects usin
 ===Non-Standard Extensions===
 There are two non-standard extensions to the ISO 14496 standard that add the ability to include file meta information. Both the boxes reside under moov.udta.meta.
 
-|| _*moov*_ || || || || || || _Movie Box_; container for all the metadata ||
-|| || _udta_ || || || || || _User Data Box_ ||
-|| || || _meta_ || || || || _The Meta Box_ ||
-|| || || || ilst || || || _The iTunes/iPod Tag Container Box_ ||
-|| || || || id32 || || || _The ID3v2 Box_ ||
+|| _*moov*_ || || || || _Movie Box_; container for all the metadata ||
+|| || _udta_ || || || _User Data Box_ ||
+|| || || _meta_ || || _The Meta Box_ ||
+|| || || || ilst || _The iTunes/iPod Tag Container Box_ ||
+|| || || || id32 || _The ID3v2 Box_ ||
 
 ==Examples==
 
