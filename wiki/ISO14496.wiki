@@ -1,0 +1,266 @@
+#summary The Programmer's Reference Guide: ISO14496 Class
+#labels Phase-Implementation
+
+=PHP-Reader Documentation: ISO14496 Class=
+By [http://code.google.com/u/svollbehr/ svollbehr]
+
+==Introduction==
+The `ISO14496` class provides *a full implementation* of the ISO 14496 Part 12 standard, or the ISO Base Media File Format as defined by [http://www.iso.org/ ISO.org].
+
+The ISO Base Media File Format is designed to contain timed media information for a presentation in a flexible, extensible format that facilitates interchange, management, editing, and presentation of the media. This presentation may be local to the system containing the presentation, or may be via a network or other stream delivery mechanism.
+
+The file structure is object-oriented; a file can be decomposed into constituent objects very simply, and the structure of the objects inferred directly from their type. The file format is designed to be independent of any particular network protocol while enabling efficient support for them in general.
+
+The ISO Base Media File Format is a base format for media file formats such as Apple QuickTime, Apple iTunes AAC, and MPEG-4 Video. The class is capable of parsing all the file information.
+
+==Table of Contents==
+  * [Help Introduction]
+  * [ASF] Class
+  * [ID3v1] Class
+  * [ID3v2] Class*
+  * *`ISO14496` Class*
+  * [Magic] Class
+
+  * _[http://code.google.com/p/php-reader/issues/list?q=label:ISO14496 Issues]_
+
+==Class Information==
+  * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
+  * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ISO14496.php
+  * _Requirements:_
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader/Exception.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Transform.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ISO14496/Box.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ISO14496/Exception.php
+  * _Optional:_
+    * Any class file under <[http://code.google.com/p/php-reader/downloads/list package]>/src/ISO14496/Box/ folder
+
+==ISO 14496 Part 12 Boxes==
+
+An overall view of the normal encapsulation structure is provided in the following table.
+
+The table shows those boxes that may occur at the top-level in the left-most column; indentation is used to show possible containment. Thus, for example, a Track Header Box (tkhd) is found in a Track Box (trak), which is found in a Movie Box (moov). Not all boxes need be used in all files; the mandatory boxes are marked with bold typeface. See the description of the individual boxes for a discussion of what must be assumed if the optional boxes are not present.
+
+User data objects shall be placed only in Movie or Track Boxes, and objects using an extended type may be placed in a wide variety of containers, not just the top level.
+
+|| *ftyp* || || || || || || _File Type Box_; file type and compatibility ||
+|| pdin || || || || || || _Progressive Download Information Box_ ||
+|| *moov* || || || || || || _Movie Box_; container for all the metadata ||
+|| || *mvhd* || || || || || _Movie Header Box_; overall declarations ||
+|| || *trak* || || || || || _Track Box_; container for an individual track or stream ||
+|| || || *tkhd* || || || || _Track Header Box_; overall information about the track ||
+|| || || tref || || || || _Track Reference Box_ ||
+|| || || edts || || || || _Edit Box_ ||
+|| || || || elst || || || _Edit List Box_ ||
+|| || || *mdia* || || || || _Media Box_ ||
+|| || || || *mdhd* || || || _Media Header Box_; overall information about the media ||
+|| || || || *hdlr* || || || _Handler Reference Box_; declares the media type ||
+|| || || || *minf* || || || _Media Information Box_ ||
+|| || || || || vmhd || || _Video Media Header Box_; overall information (video track only) ||
+|| || || || || smhd || || _Sound Media Header Box_; overall information (sound track only) ||
+|| || || || || hmhd || || _Hint Media Header Box_; overall information (hint track only) ||
+|| || || || || nmhd || || _Null Media Header Box_; overall information (some tracks only) ||
+|| || || || || *dinf* || || _Data Information Box_ ||
+|| || || || || || *dref* || _Data Reference Box_ ||
+|| || || || || *stbl* || || _Sample Table Box_ ||
+|| || || || || || *stsd* || _Sample Descriptions Box_ ||
+|| || || || || || *stts* || _Decoding Time To Sample Box_ ||
+|| || || || || || ctts || _Composition Time To Sample Box_ ||
+|| || || || || || *stsc* || _Sample To Chunk Box_ ||
+|| || || || || || stsz || _Sample Size Box_ ||
+|| || || || || || stz2 || _Compact Sample Size Box_ ||
+|| || || || || || *stco*|| _Chunk Offset Box_; 32-bit ||
+|| || || || || || co64 || _Chunk Ooffset Box_; 64-bit ||
+|| || || || || || stss || _Sync Sample Table Box_ ||
+|| || || || || || stsh || _Shadow Sync Sample Table Box_ ||
+|| || || || || || padb || _Padding Bits Box_ ||
+|| || || || || || stdp || _Sample Degradation Priority Box_||
+|| || || || || || sdtp || _Independent and Disposable Samples Box_ ||
+|| || || || || || sbgp || _Sample To Group Box_ ||
+|| || || || || || sgpd || _Sample Group Description_ ||
+|| || || || || || subs || _Sub-Sample Information Box_ ||
+|| || mvex || || || || || _Movie Extends Box_ ||
+|| || || mehd || || || || _Movie Extends Header Box_ ||
+|| || || *trex* || || || || _Track Extends Box_ ||
+|| || ipmc || || || || || _IPMP Control Box_ ||
+|| moof || || || || || || _Movie Fragment Box_ ||
+|| || *mfhd* || || || || || _Movie Fragment Header Box_ ||
+|| || traf || || || || || _Track Fragment Box_ ||
+|| || || *tfhd* || || || || _Track Fragment Header Box_ ||
+|| || || trun || || || || _Track Fragment Run_ ||
+|| || || sdtp || || || || _Independent and Disposable Samples_ ||
+|| || || sbgp || || || || _SampleToGroup Box_ ||
+|| || || subs || || || || _Sub-Sample Information Box_ ||
+|| mfra || || || || || || _Movie Fragment Random Access Box_ ||
+|| || tfra || || || || || _Track Fragment Random Access Box_ ||
+|| || *mfro* || || || || || || _Movie Fragment Random Access Offset Box_ ||
+|| mdat || || || || || || _Media Data Box_ ||
+|| free || || || || || || _Free Space Box_ ||
+|| skip || || || || || || _Free Space Box_ ||
+|| || udta || || || || || _User Data Box_ ||
+|| || || cprt || || || || _Copyright Box_ ||
+|| meta || || || || || || _The Meta Box_ ||
+|| || *hdlr* || || || || || _Handler Reference Box_; declares the metadata type ||
+|| || dinf || || || || || _Data Information Box_ ||
+|| || || dref || || || || _Data Reference Box_; declares source(s) of metadata items ||
+|| || ipmc || || || || || _IPMP Control Box_ ||
+|| || iloc || || || || || _Item Location Box_ ||
+|| || ipro || || || || || _Item Protection Box_ ||
+|| || || sinf || || || || _Protection Scheme Information Box_ ||
+|| || || || frma || || || _Original Format Box_ ||
+|| || || || imif || || || _IPMP Information Box_ ||
+|| || || || schm || || || _Scheme Type Box_ ||
+|| || || || schi || || || _Scheme Information Box_ ||
+|| || iinf || || || || || _Item Information Box_ ||
+|| || || infe || || || || _Item Information Entry Box_ ||
+|| || xml || || || || || _XML Box_ ||
+|| || bxml || || || || || _Binary XML Box_ ||
+|| || pitm || || || || || _Primary Item Reference Box_ ||
+
+===Non-Standard Extensions===
+There are two non-standard extensions to the ISO 14496 standard that add the ability to include file meta information. Both the boxes reside under moov.udta.meta.
+
+|| _*moov*_ || || || || || || _Movie Box_; container for all the metadata ||
+|| || _udta_ || || || || || _User Data Box_ ||
+|| || || _meta_ || || || || _The Meta Box_ ||
+|| || || || ilst || || || _The iTunes/iPod Tag Container Box_ ||
+|| || || || id32 || || || _The ID3v2 Box_ ||
+
+==Examples==
+
+===Example #1: How to read ISO 14496 file information===
+The ISO 14496 Part 12 is an object oriented base file format and thus has all its information in nested boxes. Even the main ISO14496 class is mere a container box, and hence all the box methods apply to it too.
+ 
+Besides the fact that the format is easy to structure with an object oriented language, it also allows readers to skip any boxes they do not know (and thus allow extensions). Accessing information happens mainly by walking the boxes according to the box hierarchy.
+
+{{{
+<?php
+require_once("ISO14496.php");
+
+$isom = new ISO14496("file.(m4a|m4b|..)");
+
+foreach ($isom->getBoxes() as $name => $boxes)
+  foreach ($boxes as $box)
+    echo "Box $name\n";
+}}}
+
+The above example prints all the top level boxes found in the file. The file must contain at least _ftyp_ and _moov_ boxes to be valid. All the required boxes are marked with bold typeface in the box hierarchy table seen before. The following example shows how to get the file type information from the _ftyp_ box.
+
+{{{
+<?php
+require_once("ISO14496.php");
+
+$isom = new ISO14496("file.(m4a|m4b|..)");
+
+$ftyp = $isom->getBoxesByIdentifier("ftyp"); // the file type information box
+$brand = $ftyp->getMajorBrand();             // the type of data this file contains
+$version = $ftyp->getMinorVersion();         // the version number of the brand
+}}}
+
+There is a simpler way to access the boxes, too, as shown in the example below.
+
+{{{
+<?php
+require_once("ISO14496.php");
+
+$isom = new ISO14496("file.(m4a|m4b|..)");
+
+$ftyp = $isom->ftyp;       // will always work, as ftyp is mandatory
+$mdat = $isom->mdat;       // might throw an exception, as mdat is optional
+
+$trak = $isom->moov->trak; // returns the first trak box only, or..
+$trak = $isom->moov->getBoxesByIdentifier("trak"); // ..an array of trak boxes
+}}}
+
+Note that the shorthands will always return the first box available. If all the boxes need to be returned, one must use the getBoxesByIdentifier method as shown in the example.
+
+It is also recommended to use try-catch blocks around your code if you are accessing boxes that might not exist. The following example shows how to properly check for box existence to avoid run time errors.
+
+{{{
+<?php
+require_once("ISO14496.php");
+
+$isom = new ISO14496("file.(m4a|m4b|..)");
+
+if ($isom->hasBox("mdat"))
+  $mdat = $isom->mdat;
+
+// or ..
+
+if (isset($isom->mdat))
+  $mdat = $isom->mdat;
+
+// or ..
+
+try {
+  $mdat = $isom->mdat;
+} catch (ISO14496_Exception $e) {
+  // box not found
+}
+}}}
+
+The last way is the preferred way to check paths, as it also recognizes paths deeper than one box.
+
+===Example #2: Reading iTunes/iPod tag information===
+Apple has specified an extension to ISO 14496 standard to allow storing of media information. The information is located in an _ilst_ box under _moov.udta.meta_.
+
+The _ilst_ box is a container of other boxes that represent the fields. Each field contains one or more _data_ boxes that represent the field value. Hence, getting all the information from the tag is rather straightforward as illustrated below.
+
+{{{
+<?php
+require_once("ISO14496.php");
+
+$isom = new ISO14496("file.(m4a|m4b|..)");
+
+try {
+  $ilst = $isom->moov->udta->meta->ilst;    // throws if not found
+  
+  foreach ($ilst->boxes as $name => $boxes)
+    foreach ($boxes as $box)
+      echo "$name : {$box->data->value}\n";
+} catch (ISO14496_Exception $e) {
+  // no tag found
+}
+}}}
+
+The type of the value the _data_ box contains is defined in the box flags field. For example, the cover image uses either JPEG (0xd) or PNG (0xe) binary image data. In order to know which, one needs to check the flags. The example below shows how one can echo the cover image data to a browser with the right headers.
+
+{{{
+<?php
+require_once("ISO14496.php");
+
+$isom = new ISO14496("file.(m4a|m4b|..)");
+
+try {
+  $ilst = $isom->moov->udta->meta->ilst;    // throws if not found
+  
+  if ($ilst->covr->data->hasFlag(ISO14496_Box_DATA::JPEG))
+    header("Content-Type: image/jpeg");
+  if ($ilst->covr->data->hasFlag(ISO14496_Box_DATA::PNG))
+    header("Content-Type: image/png");
+  echo $ilst->covr->data->value;
+} catch (ISO14496_Exception $e) {
+  // no tag found
+}
+}}}
+
+===Example #3: Reading ID3v2 tag information===
+MP4 registration authority has specified an extension to ISO 14496 standard to allow storing of media information. The extension uses ID3v2 tag to store the information and only provides with a box to contain the tag data. The tag is located in an _id32_ box under _moov.udta.meta_. Its use is hence as easy as getting the tag out, as shown below.
+
+{{{
+<?php
+require_once("ISO14496.php");
+
+$isom = new ISO14496("file.(m4a|m4b|..)");
+
+try {
+  $id3 = $isom->moov->udta->meta->id32->tag;    // throws if not found
+
+  // id3 contains an instance of ID3v2 class
+} catch (ISO14496_Exception $e) {
+  // no tag found
+}
+}}}
+
+
+See the class documentation found in the source package for the documentation for all the available boxes and their methods.
