@@ -226,7 +226,7 @@ if (isset($isom->mdat))
   $mdat = $isom->mdat;
 }}}
 
-Since the ISO14496 class supports partial write, accessing a box that is not present will yield into attempt to create it and add it to the containing box. Only ID32 and ILST boxes currently support write, and accessing any other undefined box will give you _Warning: Missing argument 1_.
+Since the `ISO14496` class supports partial write, accessing a box that is not present will yield into attempt to create it and add it to the containing box. Only ID32 and ILST boxes currently support write, and accessing any other undefined box will give you _Warning: Missing argument 1_.
 
 ===Example #2: Reading iTunes/iPod tag information===
 Apple has specified an extension to ISO 14496 standard to allow storing of media information. The information is located in an _ilst_ box under _moov.udta.meta_.
@@ -297,9 +297,9 @@ if (isset($isom->moov->udta->meta->id32)) {
 Please refer to [ID3v2] documentation for details on how to get information from the tag.
 
 ===Example #4: Writing changes back to the media file===
-The ISO14496 class supports the write operation on both the extension boxes.
+The `ISO14496` class supports the write operation on both the extension boxes.
 
-The example below shows how to add a new ID3v2 tag to ISO base media file.
+The example below shows how to add a new [ID3v2] tag to ISO base media file.
 
 {{{
 <?php
@@ -333,9 +333,9 @@ if (isset($isom->moov->udta->meta->id32)) {
 }}}
 
 ===Example #5: Optimizing running time===
-Parsing all the boxes can take significant amount of time (as opposed to parsing only what we need). The file format is designed to have a lot of tables and lists to ease the decoding. However, these are only rarely used in a read only web application.
+Parsing all the boxes can take significant amount of time (as opposed to parsing only what we need). The ISO base media file format is designed to have a lot of tables and lists to ease the decoding process. However, these are only rarely used in a read only web application.
 
-Hence, the ISO14496 class also supports the option to limit parsing to a certain level, or node. The `base` option limits parsing to only boxes that contain the specified minimum base path. The options are passed to the class as an array parameter.
+Hence, the `ISO14496` class also supports the option to limit parsing to a certain level, or node. The `base` option limits parsing to only boxes that contain the specified minimum base path. The options are passed to the class as an array parameter.
 
 {{{
 <?php
