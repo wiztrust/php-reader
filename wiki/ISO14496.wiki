@@ -34,6 +34,8 @@ The ISO Base Media File Format is a base format for media file formats such as A
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ISO14496/Exception.php
   * _Optional:_
     * Any class file under <[http://code.google.com/p/php-reader/downloads/list package]>/src/ISO14496/Box/ folder
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ISO14496/Box/ILST.php for [http://www.apple.com/ Apple] iTunes/iPod extension
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ISO14496/Box/ID32.php for [http://www.mp4ra.com/ MP4RA] ID3v2 extension
 
 ==ISO 14496 Part 12 Boxes==
 
@@ -123,8 +125,8 @@ There are two non-standard extensions to the ISO 14496 standard that add the abi
 || _*moov*_ || || || || _Movie Box_; container for all the metadata ||
 || || _udta_ || || || _User Data Box_ ||
 || || || _meta_ || || _The Meta Box_ ||
-|| || || || ilst || _The iTunes/iPod Tag Container Box_ ||
-|| || || || id32 || _The ID3v2 Box_ ||
+|| || || || ilst || _The iTunes/iPod Container Box_ ||
+|| || || || id32 || _The ID3v2 Tag Box_ ||
 
 ==Examples==
 
@@ -137,20 +139,50 @@ Besides the fact that the format is easy to structure with an object oriented la
 <?php
 require_once("ISO14496.php");
 
-$isom = new ISO14496("file.(m4a|m4b|..)");
+$isom = new ISO14496("file.(m4a|mp4|..)");
 
 foreach ($isom->getBoxes() as $name => $boxes)
   foreach ($boxes as $box)
     echo "Box $name\n";
 }}}
 
-The above example prints all the top level boxes found in the file. The file must contain at least _ftyp_ and _moov_ boxes to be valid. All the required boxes are marked with bold typeface in the box hierarchy table seen before. The following example shows how to get the file type information from the _ftyp_ box.
+The above example prints all the top level boxes found in the file. The file must contain at least _ftyp_ and _moov_ top level boxes to be valid. All the required boxes are marked with bold typeface in the box hierarchy table seen before. A bit more advanced example follows printing object information recursively.
 
 {{{
 <?php
 require_once("ISO14496.php");
 
-$isom = new ISO14496("file.(m4a|m4b|..)");
+/**
+ * Prints ISO 14496-12 box information recursively.
+ *
+ * @param ISO14496_Box $box The box where to start.
+ * @param integer $depth The recursion level the start box is in.
+ * @return void
+ */
+function printRecurse($box, $depth = 0) {
+  foreach ($box->boxes as $name => $boxes) {
+    foreach ($boxes as $atom) {
+      echo str_repeat(" ", $depth * 4) . "Atom " . $name . " @ " .
+        $atom->offset . " of size: " . $atom->size . ", ends @ " .
+        ($atom->offset + $atom->size) . "\n";
+      if ($atom->isContainer())
+        printRecurse($atom, $depth + 1);
+    }
+  }
+}
+
+$isom = new ISO14496("file.(m4a|mp4|..)");
+
+printRecurse($isom);
+}}}
+
+The following example shows how to get the file type information from the _ftyp_ box.
+
+{{{
+<?php
+require_once("ISO14496.php");
+
+$isom = new ISO14496("file.(m4a|mp4|..)");
 
 $ftyp = $isom->getBoxesByIdentifier("ftyp"); // the file type information box
 $brand = $ftyp->getMajorBrand();             // the type of data this file contains
@@ -163,24 +195,27 @@ There is a simpler way to access the boxes, too, as shown in the example below.
 <?php
 require_once("ISO14496.php");
 
-$isom = new ISO14496("file.(m4a|m4b|..)");
+$isom = new ISO14496("file.(m4a|mp4|..)");
 
-$ftyp = $isom->ftyp;       // will always work, as ftyp is mandatory
-$mdat = $isom->mdat;       // might throw an exception, as mdat is optional
+$duration = $isom->moov->mvhd->duration /
+            $isom->moov->mvhd->timescale;    // will always work, as mvhd is mandatory
 
-$trak = $isom->moov->trak; // returns the first trak box only, or..
-$trak = $isom->moov->getBoxesByIdentifier("trak"); // ..an array of trak boxes
+$userdata = $isom->moov->udta;               // works only if optional udta is present
+
+$trak = $isom->moov->trak;                   // returns the first mandatory trak box only, or..
+$trak = $isom->moov->getBoxesByIdentifier("trak");
+                                             // ..an array of trak boxes
 }}}
 
 Note that the shorthands will always return the first box available. If all the boxes need to be returned, one must use the getBoxesByIdentifier method as shown in the example.
 
-It is also recommended to use try-catch blocks around your code if you are accessing boxes that might not exist. The following example shows how to properly check for box existence to avoid run time errors.
+It is also good idea to check box existence before accessing boxes that might not exist. The following example shows how to properly check for box existence to avoid run time errors.
 
 {{{
 <?php
 require_once("ISO14496.php");
 
-$isom = new ISO14496("file.(m4a|m4b|..)");
+$isom = new ISO14496("file.(m4a|mp4|..)");
 
 if ($isom->hasBox("mdat"))
   $mdat = $isom->mdat;
@@ -189,17 +224,9 @@ if ($isom->hasBox("mdat"))
 
 if (isset($isom->mdat))
   $mdat = $isom->mdat;
-
-// or ..
-
-try {
-  $mdat = $isom->mdat;
-} catch (ISO14496_Exception $e) {
-  // box not found
-}
 }}}
 
-The last way is the preferred way to check paths, as it also recognizes paths deeper than one box.
+Since the ISO14496 class supports partial write, accessing a box that is not present will yield into attempt to create it and add it to the containing box. Only ID32 and ILST boxes currently support write, and accessing any other undefined box will give you _Warning: Missing argument 1_.
 
 ===Example #2: Reading iTunes/iPod tag information===
 Apple has specified an extension to ISO 14496 standard to allow storing of media information. The information is located in an _ilst_ box under _moov.udta.meta_.
@@ -210,15 +237,15 @@ The _ilst_ box is a container of other boxes that represent the fields. Each fie
 <?php
 require_once("ISO14496.php");
 
-$isom = new ISO14496("file.(m4a|m4b|..)");
+$isom = new ISO14496("file.(m4a|mp4|..)");
 
-try {
-  $ilst = $isom->moov->udta->meta->ilst;    // throws if not found
+if (isset($isom->moov->udta->meta->ilst)) {
+  $ilst = $isom->moov->udta->meta->ilst;
   
   foreach ($ilst->boxes as $name => $boxes)
     foreach ($boxes as $box)
       echo "$name : {$box->data->value}\n";
-} catch (ISO14496_Exception $e) {
+} else {
   // no tag found
 }
 }}}
@@ -229,17 +256,21 @@ The type of the value the _data_ box contains is defined in the box flags field.
 <?php
 require_once("ISO14496.php");
 
-$isom = new ISO14496("file.(m4a|m4b|..)");
+$isom = new ISO14496("file.(m4a|mp4|..)");
 
-try {
-  $ilst = $isom->moov->udta->meta->ilst;    // throws if not found
+if (isset($isom->moov->udta->meta->ilst)) {
+  $ilst = $isom->moov->udta->meta->ilst;
   
-  if ($ilst->covr->data->hasFlag(ISO14496_Box_DATA::JPEG))
-    header("Content-Type: image/jpeg");
-  if ($ilst->covr->data->hasFlag(ISO14496_Box_DATA::PNG))
-    header("Content-Type: image/png");
-  echo $ilst->covr->data->value;
-} catch (ISO14496_Exception $e) {
+  if (isset($ilst->covr)) {
+    if ($ilst->covr->data->hasFlag(ISO14496_Box_DATA::JPEG))
+      header("Content-Type: image/jpeg");
+    if ($ilst->covr->data->hasFlag(ISO14496_Box_DATA::PNG))
+      header("Content-Type: image/png");
+    echo $ilst->covr->data->value;
+  } else {
+    echo "No image";
+  }
+} else {
   // no tag found
 }
 }}}
@@ -249,17 +280,70 @@ MP4 registration authority has specified an extension to ISO 14496 standard to a
 
 {{{
 <?php
+require_once("ID3v2.php");
 require_once("ISO14496.php");
 
-$isom = new ISO14496("file.(m4a|m4b|..)");
+$isom = new ISO14496("file.(m4a|mp4|..)");
 
-try {
-  $id3 = $isom->moov->udta->meta->id32->tag;    // throws if not found
+if (isset($isom->moov->udta->meta->id32)) {
+  $id32 = $isom->moov->udta->meta->id32->tag;
 
   // id3 contains an instance of ID3v2 class
-} catch (ISO14496_Exception $e) {
+} else {
   // no tag found
 }
+}}}
+
+Please refer to [ID3v2] documentation for details on how to get information from the tag.
+
+===Example #4: Writing changes back to the media file===
+The ISO14496 class supports the write operation on both the extension boxes.
+
+The example below shows how to add a new ID3v2 tag to ISO base media file.
+
+{{{
+<?php
+require_once("ID3v2.php");
+require_once("ISO14496.php");
+
+
+$id3 = new ID3v2();
+$id3->tit2->text = "My song";
+$id3->tpe1->text = "By me!";
+
+$isom = new ISO14496("file.(m4a|mp4|..)");
+$isom->moov->udta->meta->id32->tag = $id3;
+
+$isom->write();
+}}}
+
+The previously written tag can also be edited just as easily, as shown next.
+
+{{{
+<?php
+require_once("ID3v2.php");
+require_once("ISO14496.php");
+
+if (isset($isom->moov->udta->meta->id32)) {
+  $id3 =& $isom->moov->udta->meta->id32->tag;
+  $id3->talb->text = "My album too";
+
+  $isom->write();
+}
+}}}
+
+===Example #5: Optimizing running time===
+Parsing all the boxes can take significant amount of time (as opposed to parsing only what we need). The file format is designed to have a lot of tables and lists to ease the decoding. However, these are only rarely used in a read only web application.
+
+Hence, the ISO14496 class also supports the option to limit parsing to a certain level, or node. The `base` option limits parsing to only boxes that contain the specified minimum base path. The options are passed to the class as an array parameter.
+
+{{{
+<?php
+require_once("ISO14496.php");
+
+$isom = new ISO14496("file.(m4a|mp4|..)", array("base" => "moov.udta.meta.id32"));
+
+// the isom only knows boxes under moov.udta.meta.id32, inclusive
 }}}
 
 
