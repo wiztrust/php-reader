@@ -126,39 +126,34 @@ User data objects shall be placed only in Movie or Track Boxes, and objects usin
 There are two non-standard extensions to the ISO 14496 standard that add the ability to include file meta information. Both the boxes reside under moov.udta.meta.
 
 || _*moov*_ || || || || _Movie Box_; container for all the metadata ||
-|| || _udta_ || || || _User Data Box_ ||
-|| || || _meta_ || || _The Meta Box_ ||
-|| || || || ilst || _The iTunes/iPod Container Box_ ||
-
-
-- _nam : Name of the song/movie (string)
- - _ART : Name of the artist/performer (string)
- - _wrt : Name of the writer (string)
- - _alb : Name of the album (string)
- - _day : Year (4 bytes, e.g. "2003") (string)
- - _too : Tool(s) used to create the file (string)
- - _cmt : Comment (string)
- - _gen : Custom genre (string)
- - trkn : Tracknumber (8 byte string)
-           16 bit: empty
-           16 bit: tracknumber
-           16 bit: total tracks on album
-           16 bit: empty
- - disk : Disknumber (8 byte string)
-           16 bit: empty
-           16 bit: disknumber
-           16 bit: total number of disks
-           16 bit: empty
- - gnre : Genre (16 bit genre) (ID3v1 index + 1)
- - cpil : Part of a compilation (1 byte, 1 or 0)
- - tmpo : Tempo in BPM (16 bit)
- - covr : Cover art (xx bytes binary data)
- - ---- : Free form metadata, can have any name and any data
-
-
-
-
-|| || || || id32 || _The ID3v2 Tag Box_ ||
+|| || _udta_ || || || || _User Data Box_ ||
+|| || || _meta_ || || || _The Meta Box_ ||
+|| || || || ilst || || _The iTunes/iPod Container Box_ ||
+|| || || || || ©nam || Name of the track ||
+|| || || || || ©ART || Name of the artist ||
+|| || || || || aART || Name of the album artist ||
+|| || || || || ©alb || Name of the album ||
+|| || || || || ©grp || Grouping ||
+|| || || || || ©day || Year of publication ||
+|| || || || || trkn || Track number (number/total) ||
+|| || || || || disk || Disk number (number/total) ||
+|| || || || || tmpo || BPM tempo ||
+|| || || || || ©wrt || Name of the composer ||
+|| || || || || ©cmt || Comments ||
+|| || || || || ©gen || Genre as string ||
+|| || || || || gnre || Genre as an ID3v1 code, added by one ||
+|| || || || || cpil || Part of a compilation (0/1) ||
+|| || || || || tvsh || Name of the (television) show ||
+|| || || || || sonm || Sort name of the track ||
+|| || || || || soar || Sort name of the artist ||
+|| || || || || soaa || Sort name of the album artist ||
+|| || || || || soal || Sort name of the album ||
+|| || || || || soco || Sort name of the composer ||
+|| || || || || sosn || Sort name of the show ||
+|| || || || || ©lyr || Lyrics ||
+|| || || || || covr || Cover (or other) artwork binary data ||
+|| || || || || ©too || Information about the software ||
+|| || || || id32 || || _The ID3v2 Tag Box_ ||
 
 ==Examples==
 
