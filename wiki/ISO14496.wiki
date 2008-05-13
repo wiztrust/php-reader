@@ -24,6 +24,9 @@ The ISO Base Media File Format is a base format for media file formats such as A
   * _[http://code.google.com/p/php-reader/issues/list?q=label:ISO14496 Issues]_
 
 ==Class Information==
+
+http://groups.google.com/group/php-reader/web/reader.classdiagram.iso1449.png
+
   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ISO14496.php
   * _Requirements:_
@@ -126,6 +129,35 @@ There are two non-standard extensions to the ISO 14496 standard that add the abi
 || || _udta_ || || || _User Data Box_ ||
 || || || _meta_ || || _The Meta Box_ ||
 || || || || ilst || _The iTunes/iPod Container Box_ ||
+
+
+- _nam : Name of the song/movie (string)
+ - _ART : Name of the artist/performer (string)
+ - _wrt : Name of the writer (string)
+ - _alb : Name of the album (string)
+ - _day : Year (4 bytes, e.g. "2003") (string)
+ - _too : Tool(s) used to create the file (string)
+ - _cmt : Comment (string)
+ - _gen : Custom genre (string)
+ - trkn : Tracknumber (8 byte string)
+           16 bit: empty
+           16 bit: tracknumber
+           16 bit: total tracks on album
+           16 bit: empty
+ - disk : Disknumber (8 byte string)
+           16 bit: empty
+           16 bit: disknumber
+           16 bit: total number of disks
+           16 bit: empty
+ - gnre : Genre (16 bit genre) (ID3v1 index + 1)
+ - cpil : Part of a compilation (1 byte, 1 or 0)
+ - tmpo : Tempo in BPM (16 bit)
+ - covr : Cover art (xx bytes binary data)
+ - ---- : Free form metadata, can have any name and any data
+
+
+
+
 || || || || id32 || _The ID3v2 Tag Box_ ||
 
 ==Examples==

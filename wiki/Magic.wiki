@@ -20,6 +20,9 @@ Although this method is significantly slower than determining the type by file s
   * _[http://code.google.com/p/php-reader/issues/list?q=label:Magic Issues]_
 
 ==Class Information==
+
+http://groups.google.com/group/php-reader/web/reader.classdiagram.magic.png
+
   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/Magic.php
   * _Requirements:_
