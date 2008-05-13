@@ -125,7 +125,7 @@ User data objects shall be placed only in Movie or Track Boxes, and objects usin
 ===Non-Standard Extensions===
 There are two non-standard extensions to the ISO 14496 standard that add the ability to include file meta information. Both the boxes reside under moov.udta.meta.
 
-|| _*moov*_ || || || || _Movie Box_; container for all the metadata ||
+|| _*moov*_ || || || || || _Movie Box_; container for all the metadata ||
 || || _udta_ || || || || _User Data Box_ ||
 || || || _meta_ || || || _The Meta Box_ ||
 || || || || ilst || || _The iTunes/iPod Container Box_ ||
