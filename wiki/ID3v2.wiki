@@ -2,7 +2,7 @@
 #labels Phase-Implementation
 
 =PHP-Reader Documentation: ID3v2 Class=
-By [http://code.google.com/u/wphilipw/ wphilipw], [http://code.google.com/u/svollbehr/ svollbehr]
+By [http://code.google.com/u/wphilipw/ wphilipw], [http://code.google.com/u/svollbehr/ svollbehr], [http://code.google.com/u/buttza/ buttza]
 
 ==Introduction==
 The `ID3v2` class provides *a full implementation* of the ID3v2.3.0 and ID3v2.4.0 standards as defined by [http://www.id3.org/ ID3.org]. The ID3 tag can be used with various files including MPEG Layer III, or MP3 files. The class is capable of both reading and writing tag information.
@@ -158,7 +158,90 @@ echo $id3->apic->data;
 
 No harder than that!
 
-===Example #5: Version juggling===
+===Example #5: Case study: How to extract cover images from music files===
+In a slightly harder example we extract the cover images from a directory full of music files. In this example we first scan the whole directory looking for MP3 files. After ensuring the file contains a valid `ID3v2` tag and actually has a cover image, we gather information about the image and write the image data to a separate file, or the same file with an added image suffix.
+
+{{{
+<?php
+require_once("ID3v2.php");
+
+$directory = "../change/path/to/mp3/directory/here";
+
+/* Retrieve all files in the directory */
+foreach (glob($directory . "/*.mp3") as $file) {
+  echo "Reading " . $file . "\n";
+  
+  /* Attempt to parse the file, catching any exceptions */
+  try {
+    $id3 = new ID3v2($file);
+  }
+  catch (ID3_Exception $e) {
+    echo "  " . $e->getMessage() . "\n";
+    continue;
+  }
+
+  if (isset($id3->apic)) {
+    echo "  Found a cover image, writing image data to a separate file..\n";
+    
+    /* Write the image */
+    $type = split("/", $id3->apic->mimeType, 2);
+    if (($handle = fopen
+         ($image = $file . "." . $type[1], "wb")) !== false) {
+      if (fwrite($handle, $id3->apic->imageData,
+                 $id3->apic->imageSize) != $id3->apic->imageSize)
+        echo "  Found a cover image, but unable to write image file: " .
+          $image . "\n";
+      fclose($handle);
+    }
+    else echo "  Found a cover image, but unable to open image file " .
+      "for writing: " . $image . "\n";
+  } else
+    echo "  No cover image found!\n";
+}
+?>
+}}}
+
+One can run the script from a command prompt or terminal. With a little tuning, one could even take the source directory from the command line arguments.
+
+===Example #6: Case study: How to bulk edit ID3 tags===
+Bulk editing ID3 tags might come in handy in several occations. Say, you forgot to enter the year to all of the songs ripped in the whole last month, or you want to update the link to your website. Whatever the case, in this example, similarly to the last example, we go through all the files of a directory, and perform a single edit or multiple edits at once to each file one at a time. Changes can be written back to the original file or saved to an alternate location.
+
+{{{
+<?php
+require_once("ID3v2.php");
+
+$directory = "../change/path/to/mp3/directory/here";
+
+/* Retrieve all files in the directory */
+foreach (glob($directory . "/*.mp3") as $file) {
+  echo "Reading " . $file . "\n";
+
+  /* Attempt to parse and edit the file, catching any exceptions */
+  try {
+    $id3 = new ID3v2($file);
+
+    // Edit the following to match your editing needs
+    $id3->txxx->text = "Edited by PHP Reader http://php-reader.googlecode.com/";
+
+    // Finally, write changes back to the original file
+    $id3->write();
+    // ..or to an another file
+    $id3->write("another/directory/" . basename($file));
+    // ..or both
+    
+    echo "  File successfully edited!\n";
+  }
+  catch (ID3_Exception $e) {
+    echo "  " . $e->getMessage() . "\n";
+    continue;
+  }
+}
+?>
+}}}
+
+One can run the script from a command prompt or terminal.
+
+===Example #7: Version juggling===
 By default, the `ID3v2` class recognizes the version of the standard used to write the tag. When you write a new tag, the class defaults to the newest version 4.0. You can change this behaviour by giving an options array to the constructor as shown below.
 
 {{{
