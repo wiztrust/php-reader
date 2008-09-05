@@ -5,10 +5,17 @@
 By [http://code.google.com/u/wphilipw/ wphilipw], [http://code.google.com/u/svollbehr/ svollbehr]
 
 ==Introduction==
-The `ASF` class is a partial implementation of the Advanced Systems Format (ASF) standard. ASF is a file format that can contain various types of information ranging from audio (Windows Media Audio, WMA) and video (Windows Media Video, WMV) to script commands and developer defined custom streams. The `ASF` class is capable of reading the file information headers.
+The `ASF` class provides *a full implementation* of the Advanced Systems Format (ASF) standard as defined by [http://go.microsoft.com/fwlink/?LinkId=31334 The Advanced Systems Format (ASF) Specification].
+ 
+The ASF is a file format that can contain various types of information ranging from audio and video to script commands and developer defined custom streams.
+
+The ASF file consists of code blocks that are called content objects. Each of these objects have a format of their own. They may contain other objects or other specific data. Each supported object has been implemented as their own classes to ease the correct use of the information.
+
+The Advanced Systems Format is a base format for media file formats such as Microsoft Windows Audio (WMA) and Microsoft Windows Video (WMV). The `ASF` class is capable of parsing all the file information.
 
 ==Table of Contents==
   * [Help Introduction]
+  * [GeneralPurposeClasses General Purpose Classes]
   * *`ASF` Class*
   * [ID3v1] Class
   * [ID3v2] Class
@@ -18,34 +25,184 @@ The `ASF` class is a partial implementation of the Advanced Systems Format (ASF)
   * _[http://code.google.com/p/php-reader/issues/list?q=label:ASF Issues]_
 
 ==Class Information==
+
+http://groups.google.com/group/php-reader/web/reader.classdiagram.asf.png
+
   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ASF.php
   * _Requirements:_
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader/Exception.php
-    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ASF/
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Transform.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ASF/Object.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/ASF/Exception.php
+  * _Optional:_
+    * Any class file under <[http://code.google.com/p/php-reader/downloads/list package]>/src/ASF/Object/ folder
+
+==ASF Objects==
+
+The following table describes standard objects that have been defined for all ASF objects. Implementations may supplement this list with additional objects when necessary to identify entities, elements, or ideas that have not yet been enumerated by this table.
+
+The table shows top-level objects in the left-most column; indentation is used to show possible containment.
+
+|| *ASF_Object_Header* || || ||
+|| || *ASF_Object_FileProperties* || ||
+|| || *ASF_Object_StreamProperties* (one per stream) || ||
+|| || *ASF_Object_HeaderExtension* || ||
+|| || || ASF_Object_ExtendedStreamProperties ||
+|| || || ASF_Object_AdvancedMutualExclusion ||
+|| || || ASF_Object_GroupMutualExclusion ||
+|| || || ASF_Object_StreamPrioritization ||
+|| || || ASF_Object_BandwidthSharing ||
+|| || || ASF_Object_LanguageList ||
+|| || || ASF_Object_Metadata ||
+|| || || ASF_Object_MetadataLibrary ||
+|| || || ASF_Object_IndexParameters ||
+|| || || ASF_Object_MediaObjectIndexParameters ||
+|| || || ASF_Object_TimecodeIndexParameters ||
+|| || || ASF_Object_Compatibility ||
+|| || || ASF_Object_AdvancedContentEncryption ||
+|| || ASF_Object_CodecList || ||
+|| || ASF_Object_ScriptCommand || ||
+|| || ASF_Object_Marker || ||
+|| || ASF_Object_BitrateMutualExclusion || ||
+|| || ASF_Object_ErrorCorrection || ||
+|| || ASF_Object_ContentDescription || ||
+|| || ASF_Object_ExtendedContentDescription || ||
+|| || ASF_Object_ContentBranding || ||
+|| || ASF_Object_StreamBitrateProperties || ||
+|| || ASF_Object_ContentEncryption || ||
+|| || ASF_Object_ExtendedContentEncryption || ||
+|| || ASF_Object_DigitalSignature || ||
+|| || ASF_Object_Padding || ||
+|| *ASF_Object_Data* || || ||
+|| ASF_Object_SimpleIndex || || ||
+|| ASF_Object_Index || || ||
+|| ASF_Object_MediaObjectIndex || || ||
+|| ASF_Object_TimecodeIndex || || ||
 
 ==Examples==
 
 ===Example #1: How to read ASF information===
+There are basically two types of objects. There are the objects that do not contain other objects, and there are objects that do contain other objects. The former is referred to as an object whereas the latter is referred to as a container.
+
+ASF files are easy to structure with an object oriented language by their design. The structure allows readers to skip any objects they do not know and thus allow extensions. Accessing information happens mainly by the objects according to the object hierarchy.
 
 {{{
 <?php
 require_once("ASF.php");
 
-$asf = new ASF("file.(asf|wma|wmv)");
-if ($obj = $asf->nextObject()) {                      // get the header object
-  while ($obj->hasChildObjects()) {
-    $child = $obj->nextChildObject();
-    if ($child instanceof ASF_ContentDescriptionObject) {
-      $val = $child->getTitle();                      // or getAuthor, getDescription, ...
-    }
-    if ($child instanceof ASF_ExtendedContentDescriptionObject) {
-      $val = $child->getDescriptor("WM/AlbumTitle");  // or WM/Genre, WM/Year, ...
-    }
-    if ($child instanceof ASF_FilePropertiesObject) {
-      $val = $child->getFileSize();                   // or getPlayDuration, ...
+$asf = new ASF("file.(asf|wma|wmv|..)");
+
+echo get_class($asf) . "\n";
+foreach ($asf->getObjects() as $objects)
+  foreach ($objects as $object)
+    echo "  " . get_class($object) . "\n";
+}}}
+
+The above example prints all the top-level objects found in the file. The file contain at least header and data objects to be valid. All the required boxes are marked with bold typeface in the box hierarchy table seen before. A bit more advanced example below allows printing object information recursively.
+
+{{{
+<?php
+require_once("ASF.php");
+
+/**
+ * Prints ASF object information recursively.
+ *
+ * @param ASF_Object $object The object where to start.
+ * @param integer $depth The recursion level the start object is in.
+ * @return void
+ */
+function printRecurse($obj, $depth = 0) {
+  foreach ($obj->objects as $objects) {
+    foreach ($objects as $object) {
+      echo str_repeat(" ", $depth * 4) . "Object " . get_class($object) . " (" . $object->identifier . ") @ " .
+        $object->offset . " of size: " . $object->size . ", ends @ " .
+        ($object->offset + $object->size) . "\n";
+      if ($object instanceof ASF_Object_Container)
+        printRecurse($object, $depth + 1);
     }
   }
 }
+
+$asf = new ASF("file.(asf|wma|wmv|..)");
+
+printRecurse($asf);
 }}}
+
+The following example shows how to get the file properties from the !FileProperties object under the Header object.
+
+{{{
+<?php
+require_once("ASF.php");
+
+$asf = new ASF("file.(asf|wma|wmv|..)");
+
+$playDuration = $asf->header->fileProperties->playDuration;
+$preroll      = $asf->header->fileProperties->preroll;
+
+echo "Play duration of your file is " .
+  (($minutes = floor(($seconds = floor(($playDuration - $preroll) / 10000000)) / 60)) > 0 ?
+   (($hours = floor($minutes / 60)) > 0 ? $hours . " hours, " .
+    str_pad($minutes % 60, 2, "0", STR_PAD_LEFT) : $minutes % 60) . " minutes and " .
+    str_pad($seconds % 60, 2, "0", STR_PAD_LEFT) : $seconds % 60) . " seconds\n";
+}}}
+
+To fully understand what is going on here you must be familiar with the magic functions of PHP. Whenever you call a member of the container class, the call is intercepted and the class first checks whether there is a getter/setter method with that name. If not, it checks whether the container has an object with the name. If all of these fail, an exception is thrown. So, instead of writing the following:
+
+{{{
+<?php
+require_once("ASF.php");
+
+$asf = new ASF("file.(asf|wma|wmv|..)");
+
+$fileProperties = $asf->getObjectsByIdentifier(ASF::FILE_PROPERTIES);
+$playDuration = $fileProperties[0]->getPlayDuration();
+
+// ...
+}}}
+
+You may simply call the shorthands as shown in the previous example. It is very important to know what happens here because you might run into unexpected results when you try to call on an object that does not exist.
+ 
+The shorthands will also always return only the first object available. If all the objects need to be returned, one must use the `getObjectsByIdentifier` method as shown in the above example.
+
+The ASF standard defines several optional objects so it is generally a good idea to check whether the object exists before accessing it. The following example shows how to properly check for object existence to avoid run time errors.
+
+{{{
+<?php
+require_once("ASF.php");
+
+$asf = new ASF("file.(asf|wma|wmv|..)");
+
+if ($asf->hasObject(ASF::SIMPLE_INDEX))
+  $simpleIndex = $asf->simpleIndex;
+
+// or ..
+
+if (isset($asf->simpleIndex))
+  $simpleIndex = $asf->simpleIndex;
+}}}
+
+While you do not need to check the existence of the file properties object (as it is mandatory),  the checks are needed when printing out anything from optional objects, like the content description information. The following listing is to provide you with a full example of the proper way to access optional information.
+
+{{{
+<?php
+require_once("ASF.php");
+
+$asf = new ASF("file.(asf|wma|wmv|..)");
+
+if (isset($asf->header->contentDescription)) {
+  echo "A song by " . $asf->header->contentDescription->author .
+    " called " . $asf->header->contentDescription->title . "\n";
+} else {
+  echo "The file does not contain additional information about the song.\n";
+}
+
+if (isset($asf->header->extendedContentDescription)) {
+  echo "The song contains also the following extended descriptors:\n";
+  foreach ($asf->header->extendedContentDescription->descriptors as $name => $value)
+    echo "  " . $name . ": " . $value . "\n";
+}
+}}}
+
+See the class documentation found in the source package for the documentation for all the available objects and their methods.

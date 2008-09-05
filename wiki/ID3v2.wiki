@@ -9,6 +9,7 @@ The `ID3v2` class provides *a full implementation* of the ID3v2.3.0 and ID3v2.4.
 
 ==Table of Contents==
   * [Help Introduction]
+  * [GeneralPurposeClasses General Purpose Classes]
   * [ASF] Class
   * [ID3v1] Class
   * *`ID3v2` Class*

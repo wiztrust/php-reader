@@ -15,6 +15,7 @@ The ISO Base Media File Format is a base format for media file formats such as A
 
 ==Table of Contents==
   * [Help Introduction]
+  * [GeneralPurposeClasses General Purpose Classes]
   * [ASF] Class
   * [ID3v1] Class
   * [ID3v2] Class

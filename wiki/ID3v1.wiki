@@ -9,6 +9,7 @@ By [http://code.google.com/u/wphilipw/ wphilipw], [http://code.google.com/u/svol
 
 ==Table of Contents==
   * [Help Introduction]
+  * [GeneralPurposeClasses General Purpose Classes]
   * [ASF] Class
   * *`ID3v1` Class*
   * [ID3v2] Class

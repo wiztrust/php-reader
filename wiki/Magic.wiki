@@ -11,6 +11,7 @@ Although this method is significantly slower than determining the type by file s
 
 ==Table of Contents==
   * [Help Introduction]
+  * [GeneralPurposeClasses General Purpose Classes]
   * [ASF] Class
   * [ID3v1] Class
   * [ID3v2] Class
