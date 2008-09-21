@@ -65,6 +65,26 @@ $title = $id3->tit2->text;                    // contains the first song title; 
 $image = $id3->apic->imageType;               // contains the first attached picture type
 }}}
 
+Please note that should you access a frame that does not exist no error is triggered. Instead, the frame gets implicitly created and added to the class instance. The newly created instance is then passed to the caller. So if you call for {{{ $id3->time->text }}} and there is no TIME frame in the tag, you will get the default value of a newly created TIME frame object instance, or an empty string.
+
+This is a feature that allows one to quickly set frame values without explicitly adding the frame to the tag. However, this might lead to a problem of determining whether the tag contains a particular frame. The following code shows how to check frame existance.
+
+{{{
+<?php
+require_once("ID3v2.php");
+
+$id3 = new ID3v2("file.mp3");
+
+
+if ($id3->hasFrame("TIME"))
+  echo "The value of TIME is " . $id3->time->text . "\n";
+
+// or with isset ..
+
+if (isset($id3->time))
+  echo "The value of TIME is " . $id3->time->text . "\n";
+}}}
+
 ===Example #2: Other ways to read ID3v2 information===
 As the most common reason to read ID3 tags is to get the song information, it is often sufficient to get out just the textual information of an ID3v2 tag. This can easily be done with just a few lines of code by using tag selector as shown below.
 
@@ -88,14 +108,19 @@ require_once("ID3v2.php");
 
 $id3 = new ID3v2("file.mp3");
 foreach ($id3->frames as $frames) {
-  if ($frames[0] instanceof ID3_Frame_AbstractText)
-    echo $frames[0]->identifier . ": " . $frames[0]->text . "\n";
-  if ($frames[0] instanceof ID3_Frame_AbstractLink)
-    echo $frames[0]->identifier . ": " . $frames[0]->link . "\n";
-  if ($frames[0] instanceof ID3_Frame_APIC)
-    echo $frames[0]->identifier . ": " . $frames[0]->imageType . "\n";
+  foreach ($frames as $frame) {
+    echo $frame->identifier;
+    if ($frame instanceof ID3_Frame_AbstractText)
+      echo ": " . $frame->text;
+    if ($frame instanceof ID3_Frame_AbstractLink)
+      echo ": " . $frame->link;
+    if ($frame instanceof ID3_Frame_APIC)
+      echo ": " . $frame->imageType;
 
-  // etc..
+    // etc..
+
+    echo "\n";
+  }
 }
 }}}
 
