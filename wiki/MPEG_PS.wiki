@@ -55,6 +55,6 @@ $output = $ps->getFormattedLength();  // or $ps->formattedLength;
 echo "Exact play duration in seconds is " . $length . " or " . $output . "\n";
 }}}
 
-The above example prints the file play duration in seconds as well as in the form of [hours]:minutes:seconds.milliseconds.
+The above example prints the file play duration in seconds as well as in the form of (hours:)minutes:seconds.milliseconds.
 
 See the class documentation found in the source package for the documentation for all the classes and their methods.
