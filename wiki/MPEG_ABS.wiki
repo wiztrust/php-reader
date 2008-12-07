@@ -1,21 +1,21 @@
-#summary The Programmer's Reference Guide: MPEG_Audio Class
+#summary The Programmer's Reference Guide: MPEG_ABS Class
 #labels Phase-Implementation
 
-=PHP-Reader Documentation: MPEG_Audio Class=
+=PHP-Reader Documentation: MPEG_ABS Class=
 By [http://code.google.com/u/svollbehr/ svollbehr]
 
 ==Introduction==
-The `MPEG_Audio` class provides *a full implementation* of the MPEG Audio encoding file format defined in MPEG-1 Audio (ISO/IEC 11172-3) and MPEG-2 Audio (ISO/IEC 13818-3) standards.
+The `MPEG_ABS` class provides *a full implementation* of the MPEG Audio Bit Stream encoding format defined in MPEG-1 Audio (ISO/IEC 11172-3) and MPEG-2 Audio (ISO/IEC 13818-3) standards.
  
-The MPEG Audio is a digital audio encoding format using a form of lossy data compression. The audio bit stream comprises of data segments called the frames which all have a header and some audio data associated with them. By examining the header information, one may receive more information about the whole audio bit stream.
+The MPEG Audio Bit Stream is a digital audio encoding format using a form of lossy data compression. The audio bit stream comprises of data segments called the frames which all have a header and some audio data associated with them. By examining the header information, one may receive more information about the whole audio bit stream.
 
 The frame header information is mostly the same between the frames but it is not uncommon to have some fields like the bit rate differ between the frames. In fact, this is quite popular nowadays as it most likely consumes less space to decode the song as the decoder may use lower bitrates for such parts that do not have much audio to encode.
 
-The variable bit rate (VBR) encoding results to a common problem as well. All frames having possibly a different bit rate, it is impossible to calculate the exact length of the song without going through all the frames and their headers in particular. While not supported by the standards, the VBR header extensions solve this by adding a header to the first frame of the MPEG Audio bit stream containing all the necessary information to calculating the exact play duration and the average (or minimum) bit rate of the bit stream.
+The variable bit rate (VBR) encoding results to a common problem as well. All frames having possibly a different bit rate, it is impossible to calculate the exact length of the song without going through all the frames and their headers in particular. While not supported by the standards, the VBR header extensions solve this by adding a header to the first frame of the MPEG Audio Bit Stream containing all the necessary information to calculating the exact play duration and the average (or minimum) bit rate of the bit stream.
 
-Support for non-standard VBR header extensions or namely the XING, VBRI and LAME headers has been added to this class. These headers provide us with advantageous details about the bit stream and are thus essential to optimize the calculation of play duration of a VBR file otherwise a resource consuming operation to do.
+Support for non-standard VBR header extensions or namely the XING, VBRI and LAME headers has been added to this class. These headers provide us with advantageous details about the bit stream and are thus essential to optimize the calculation of play duration of a VBR stream otherwise a resource consuming operation to do.
 
-The class is capable of only reading file information. Furthermore, the class is unable to decode the audio data found in the frames. You may, however, implement this functionality on top of what this class provides.
+The class is capable of only reading bit stream information. Furthermore, the class is unable to decode the audio data found in the frames. You may, however, implement this functionality on top of what this class provides.
 
 ==Table of Contents==
   * [Help Introduction]
@@ -23,19 +23,19 @@ The class is capable of only reading file information. Furthermore, the class is
   * [ASF] Class
   * [ID3v1] Class
   * [ID3v2] Class
-  * *`MPEG_Audio` Class*
+  * *`MPEG_ABS` Class*
   * [MPEG_PS] Class
   * [ISO14496] Class
   * [Magic] Class
 
-  * _[http://code.google.com/p/php-reader/issues/list?q=label:MPEG_Audio Issues]_
+  * _[http://code.google.com/p/php-reader/issues/list?q=label:MPEG_ABS Issues]_
 
 ==Class Information==
 
-http://groups.google.com/group/php-reader/web/reader.classdiagram.mpeg_audio.png
+http://groups.google.com/group/php-reader/web/reader.classdiagram.mpeg_abs.png
 
   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
-  * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/MPEG/Audio.php
+  * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/MPEG/ABS.php
   * _Requirements:_
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader/Exception.php
@@ -43,7 +43,7 @@ http://groups.google.com/group/php-reader/web/reader.classdiagram.mpeg_audio.png
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Twiddling.php
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/MPEG/Object.php
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/MPEG/Exception.php
-    * All class files under <[http://code.google.com/p/php-reader/downloads/list package]>/src/MPEG/Audio/ folder
+    * All class files under <[http://code.google.com/p/php-reader/downloads/list package]>/src/MPEG/ABS/ folder
 
 ==Examples==
 
@@ -59,18 +59,18 @@ The following example shows the lazy data reading in action.
 
 {{{
 <?php
-require_once("MPEG/Audio.php");
+require_once("MPEG/ABS.php");
 
-$audio = new MPEG_Audio("file.(mp1|mp2|mp3|..)");
+$abs = new MPEG_ABS("file.(abs|mp1|mp2|mp3|..)");
 
-echo "Estimated play duration: " . $audio->getFormattedLengthEstimate() . "\n";
-echo "Estimated bitrate:       " . $audio->getBitrateEstimate() . "\n";
-echo "Total numer of frames:   " . count($audio->getFrames()) . "\n\n";
+echo "Estimated play duration: " . $abs->getFormattedLengthEstimate() . "\n";
+echo "Estimated bitrate:       " . $abs->getBitrateEstimate() . "\n";
+echo "Total numer of frames:   " . count($abs->getFrames()) . "\n\n";
 // Total number of frames is always 1..estimatePrecision
 
-echo "Exact play duration:     " . $audio->getLength() . "\n";
-echo "Exact bitrate:           " . $audio->getBitrate() . "\n";
-echo "Total numer of frames:   " . count($audio->getFrames()) . "\n\n";
+echo "Exact play duration:     " . $abs->getLength() . "\n";
+echo "Exact bitrate:           " . $abs->getBitrate() . "\n";
+echo "Total numer of frames:   " . count($abs->getFrames()) . "\n\n";
 // Total number of frames is always equal to number of frames in the bit stream
 
 }}}
@@ -82,10 +82,10 @@ As the first frame is always read no matter what the read mode is, one may recei
 
 {{{
 <?php
-require_once("MPEG/Audio.php");
+require_once("MPEG/ABS.php");
 
-$audio = new MPEG_Audio("file.(mp1|mp2|mp3|..)");
-$frame = $audio->frames[0];     // There is always at least 1 frame read in
+$abs = new MPEG_ABS("file.(abs|mp1|mp2|mp3|..)");
+$frame = $abs->frames[0];     // There is always at least 1 frame read in
 
 $mpeg_version  = array("MPEG 2.5", 2 => "MPEG 2", "MPEG 1");
 $mpeg_layer    = array(1 => "Layer III", "Layer II", "Layer I");
@@ -116,22 +116,22 @@ The following example shows you how to test for header existence and access the 
 
 {{{
 <?php
-require_once("MPEG/Audio.php");
+require_once("MPEG/ABS.php");
 
-$audio = new MPEG_Audio("file.(mp1|mp2|mp3|..)");
+$abs = new MPEG_ABS("file.(mp1|mp2|mp3|..)");
 
-if ($audio->hasXingHeader()) {
-  $frames = $audio->getXingHeader()->getFrames();             // or $audio->xingHeader->frames
+if ($abs->hasXingHeader()) {
+  $frames = $abs->getXingHeader()->getFrames();             // or $abs->xingHeader->frames
   // ...
 }
 
-if ($audio->hasLameHeader()) {
-  $bitrate = $audio->getLameHeader()->getBitrate();           // or $audio->lameHeader->bitrate
+if ($abs->hasLameHeader()) {
+  $bitrate = $abs->getLameHeader()->getBitrate();           // or $abs->lameHeader->bitrate
   // ...
 }
 
-if ($audio->hasVbriHeader()) {
-  $quality = $audio->getVbriHeader()->getQualityIndicator();  // or $audio->vbriHeader->qualityIndicator
+if ($abs->hasVbriHeader()) {
+  $quality = $abs->getVbriHeader()->getQualityIndicator();  // or $abs->vbriHeader->qualityIndicator
   // ...
 }
 }}}
