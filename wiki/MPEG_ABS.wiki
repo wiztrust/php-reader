@@ -118,7 +118,7 @@ The following example shows you how to test for header existence and access the 
 <?php
 require_once("MPEG/ABS.php");
 
-$abs = new MPEG_ABS("file.(mp1|mp2|mp3|..)");
+$abs = new MPEG_ABS("file.(abs|mp1|mp2|mp3|..)");
 
 if ($abs->hasXingHeader()) {
   $frames = $abs->getXingHeader()->getFrames();             // or $abs->xingHeader->frames
