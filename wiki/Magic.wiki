@@ -15,6 +15,8 @@ Although this method is significantly slower than determining the type by file s
   * [ASF] Class
   * [ID3v1] Class
   * [ID3v2] Class
+  * [MPEG_Audio] Class
+  * [MPEG_PS] Class
   * [ISO14496] Class
   * *`Magic` Class*
 

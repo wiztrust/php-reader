@@ -13,6 +13,8 @@ By [http://code.google.com/u/wphilipw/ wphilipw], [http://code.google.com/u/svol
   * [ASF] Class
   * *`ID3v1` Class*
   * [ID3v2] Class
+  * [MPEG_Audio] Class
+  * [MPEG_PS] Class
   * [ISO14496] Class
   * [Magic] Class
 

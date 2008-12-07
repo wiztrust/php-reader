@@ -1,0 +1,141 @@
+#summary The Programmer's Reference Guide: MPEG_Audio Class
+#labels Phase-Implementation
+
+=PHP-Reader Documentation: MPEG_Audio Class=
+By [http://code.google.com/u/svollbehr/ svollbehr]
+
+==Introduction==
+The `MPEG_Audio` class provides *a full implementation* of the MPEG Audio encoding file format defined in MPEG-1 Audio (ISO/IEC 11172-3) and MPEG-2 Audio (ISO/IEC 13818-3) standards.
+ 
+The MPEG Audio is a digital audio encoding format using a form of lossy data compression. The audio bit stream comprises of data segments called the frames which all have a header and some audio data associated with them. By examining the header information, one may receive more information about the whole audio bit stream.
+
+The frame header information is mostly the same between the frames but it is not uncommon to have some fields like the bit rate differ between the frames. In fact, this is quite popular nowadays as it most likely consumes less space to decode the song as the decoder may use lower bitrates for such parts that do not have much audio to encode.
+
+The variable bit rate (VBR) encoding results to a common problem as well. All frames having possibly a different bit rate, it is impossible to calculate the exact length of the song without going through all the frames and their headers in particular. While not supported by the standards, the VBR header extensions solve this by adding a header to the first frame of the MPEG Audio bit stream containing all the necessary information to calculating the exact play duration and the average (or minimum) bit rate of the bit stream.
+
+Support for non-standard VBR header extensions or namely the XING, VBRI and LAME headers has been added to this class. These headers provide us with advantageous details about the bit stream and are thus essential to optimize the calculation of play duration of a VBR file otherwise a resource consuming operation to do.
+
+The class is capable of only reading file information. Furthermore, the class is unable to decode the audio data found in the frames. You may, however, implement this functionality on top of what this class provides.
+
+==Table of Contents==
+  * [Help Introduction]
+  * [GeneralPurposeClasses General Purpose Classes]
+  * [ASF] Class
+  * [ID3v1] Class
+  * [ID3v2] Class
+  * *`MPEG_Audio` Class*
+  * [MPEG_PS] Class
+  * [ISO14496] Class
+  * [Magic] Class
+
+  * _[http://code.google.com/p/php-reader/issues/list?q=label:MPEG_Audio Issues]_
+
+==Class Information==
+
+http://groups.google.com/group/php-reader/web/reader.classdiagram.mpeg_audio.png
+
+  * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
+  * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/MPEG/Audio.php
+  * _Requirements:_
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader/Exception.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Transform.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Twiddling.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/MPEG/Object.php
+    * <[http://code.google.com/p/php-reader/downloads/list package]>/src/MPEG/Exception.php
+    * All class files under <[http://code.google.com/p/php-reader/downloads/list package]>/src/MPEG/Audio/ folder
+
+==Examples==
+
+===Example #1: Optimized for speed and low memory consumption===
+This class utilizes a technique called lazy data reading. In the lazy data reading mode all the audio frames are not necessarily read into the memory when first initialized the file. The play duration and bit rate information of the file can often be determined from the VBR headers or estimated by reading only a handful of frames from the beginning of the file. Even if all the frames are read to get the exact play duration and bitrate, the data they contain is left unread until the point you request it explicitly.
+
+The data reading mode can be changed by giving an appropriate option to the constructor. The following options are recognized by the constructor.
+
+  * *readmode* -- _Can be either full or lazy and determines when the read of frames and their data happens. When in full mode the data is read automatically during the instantiation of the frame and all the frames are read during the instantiation of this class. While this allows faster validation and data fetching, it is unnecessary in terms of determining the play duration or bit rate of the file. Defaults to lazy._
+  * *estimatePrecision* -- _Only applicable with lazy read mode and is used to determine the precision of play duration estimate. This precision is equal to how many frames are read before fixing the average bitrate that is used to calculate the play duration estimate of the whole file. Each frame adds about 0.1-0.2ms to the total processing time of the file. Defaults to 1000._
+
+The following example shows the lazy data reading in action.
+
+{{{
+<?php
+require_once("MPEG/Audio.php");
+
+$audio = new MPEG_Audio("file.(mp1|mp2|mp3|..)");
+
+echo "Estimated play duration: " . $audio->getFormattedLengthEstimate() . "\n";
+echo "Estimated bitrate:       " . $audio->getBitrateEstimate() . "\n";
+echo "Total numer of frames:   " . count($audio->getFrames()) . "\n\n";
+// Total number of frames is always 1..estimatePrecision
+
+echo "Exact play duration:     " . $audio->getLength() . "\n";
+echo "Exact bitrate:           " . $audio->getBitrate() . "\n";
+echo "Total numer of frames:   " . count($audio->getFrames()) . "\n\n";
+// Total number of frames is always equal to number of frames in the bit stream
+
+}}}
+
+The first calls to play duration and bit rate estimates are calculated with minimum of one and the maximum of given estimatePrecision frames. Only after the methods that return the exact play duration or the exact bit rate are called all the frames are read. The number of frames read is the total number of frames in the bit stream. Be aware that this operation will take quite a while on larger files.
+
+===Example #2: Ways of reading file information: frame header===
+As the first frame is always read no matter what the read mode is, one may receive good amount of details of the bit stream by examining this as illustrated below.
+
+{{{
+<?php
+require_once("MPEG/Audio.php");
+
+$audio = new MPEG_Audio("file.(mp1|mp2|mp3|..)");
+$frame = $audio->frames[0];     // There is always at least 1 frame read in
+
+$mpeg_version  = array("MPEG 2.5", 2 => "MPEG 2", "MPEG 1");
+$mpeg_layer    = array(1 => "Layer III", "Layer II", "Layer I");
+$mpeg_mode     = array("Stereo", "Joint Stereo", "Dual Channel", "Single Channel");
+$mpeg_emphasis = array("No emphasis", "50/15 microsec. emphasis", 3 => "CCITT J.17");
+$mpeg_boolean  = array("No", "Yes");
+
+echo $mpeg_version[$frame->version] . " " . $mpeg_layer[$frame->layer] . ", " .
+     $frame->bitrate . " kbps, " . $mpeg_mode[$frame->mode] . "\n";
+
+echo "Sampling Rate:        " . $frame->samplingFrequency . " Hz\n" .
+     "Copyright:            " . $mpeg_boolean[$frame->copyright] . "\n" .
+     "Contains CRC-16:      " . $mpeg_boolean[$frame->redundancy] . "\n" .
+     "Copied from original: " . $mpeg_boolean[$frame->original] . "\n" .
+     "Emphasis type:        " . $mpeg_emphasis[$frame->emphasis] . "\n\n";
+
+echo "Computed Frame Size:  " . $frame->length . "\n" .
+     "Samples per Frame:    " . $frame->samples . "\n" .
+     "Padding size:         " . (int)$frame->padding . "\n";
+}}}
+
+Please note that the above example uses shorthands for accessing frame methods. All getter methods can be accessed in similar manner.
+
+===Example #3: Ways of reading file information: non-standard VBR headers===
+The first frame of an MPEG file may also contain a non-standard VBR header that provides us with helpful information about the bit stream.
+
+The following example shows you how to test for header existence and access the header information.
+
+{{{
+<?php
+require_once("MPEG/Audio.php");
+
+$audio = new MPEG_Audio("file.(mp1|mp2|mp3|..)");
+
+if ($audio->hasXingHeader()) {
+  $frames = $audio->getXingHeader()->getFrames();             // or $audio->xingHeader->frames
+  // ...
+}
+
+if ($audio->hasLameHeader()) {
+  $bitrate = $audio->getLameHeader()->getBitrate();           // or $audio->lameHeader->bitrate
+  // ...
+}
+
+if ($audio->hasVbriHeader()) {
+  $quality = $audio->getVbriHeader()->getQualityIndicator();  // or $audio->vbriHeader->qualityIndicator
+  // ...
+}
+}}}
+
+Please note that if any of the non-standard headers are contained within the first frame the frame itself does not contain further audio data and is hence also not considered as an audio frame.
+
+See the class documentation found in the source package for the documentation for all the classes and their methods.
