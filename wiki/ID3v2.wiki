@@ -22,7 +22,7 @@ The `ID3v2` class provides *a full implementation* of the ID3v2.3.0 and ID3v2.4.
 
 ==Class Information==
 
-http://groups.google.com/group/php-reader/web/reader.classdiagram.id3v2.png
+http://php-reader.googlegroups.com/web/reader.classdiagram.id3v2.png
 
   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3v2.php

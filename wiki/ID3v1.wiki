@@ -22,7 +22,7 @@ By [http://code.google.com/u/wphilipw/ wphilipw], [http://code.google.com/u/svol
 
 ==Class Information==
 
-http://groups.google.com/group/php-reader/web/reader.classdiagram.id3v1.png
+http://php-reader.googlegroups.com/web/reader.classdiagram.id3v1.png
 
   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3v1.php

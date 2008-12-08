@@ -26,7 +26,7 @@ The current implementation supports only parsing of the play duration.
 
 ==Class Information==
 
-http://groups.google.com/group/php-reader/web/reader.classdiagram.mpeg_ps.png
+http://php-reader.googlegroups.com/web/reader.classdiagram.mpeg_ps.png
 
   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/MPEG/PS.php

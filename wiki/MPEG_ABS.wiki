@@ -32,7 +32,7 @@ The class is capable of only reading bit stream information. Furthermore, the cl
 
 ==Class Information==
 
-http://groups.google.com/group/php-reader/web/reader.classdiagram.mpeg_abs.png
+http://php-reader.googlegroups.com/web/reader.classdiagram.mpeg_abs.png
 
   * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/MPEG/ABS.php
