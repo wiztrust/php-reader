@@ -138,4 +138,140 @@ if ($abs->hasVbriHeader()) {
 
 Please note that if any of the non-standard headers are contained within the first frame the frame itself does not contain further audio data and is hence also not considered as an audio frame.
 
+===Example #4: Case study: How to graph VBR file bitrate distribution===
+In this example we go through how to use the `MPEG_ABS` class to determine the bitrate distribution of given audio file. Just to make the example a bit more interesting the bitrate information is graphed using Google Charts API.
+
+First we need to determine the bitrate information. The Audio Bit Stream may contain various sets of bitrates depending on sampling frequency and layer.
+  
+The strategy here is to form an array of all the possible bitrate sets in it and then go through the audio file frame by frame to get the bitrate distribution. We also need to determine some min/max values for the graphs. The code for this is shown below.
+
+{{{
+/* Open the Audio Bit Stream file for reading */
+$abs = new MPEG_ABS("test/test_vbr.mp3");
+
+
+/* Determine bitrate distribution */
+$bitrates = array(
+  MPEG_ABS::SAMPLING_FREQUENCY_HIGH => array (
+    MPEG_ABS::LAYER_ONE   => array (
+      32 => 0, 64 => 0, 96 => 0, 128 => 0, 160 => 0, 192 => 0, 224 => 0,
+      256 => 0, 288 => 0, 320 => 0, 352 => 0, 384 => 0, 416 => 0, 448 => 0),
+    MPEG_ABS::LAYER_TWO   => array (
+      32 => 0, 48 => 0, 56 => 0, 64 => 0, 80 => 0, 96 => 0, 112 => 0, 128 => 0,
+      160 => 0, 192 => 0, 224 => 0, 256 => 0, 320 => 0, 384 => 0),
+    MPEG_ABS::LAYER_THREE => array (
+      32 => 0, 40 => 0, 48 => 0, 56 => 0, 64 => 0, 80 => 0, 96 => 0, 112 => 0,
+      128 => 0, 160 => 0, 192 => 0, 224 => 0, 256 => 0, 320 => 0)
+  ),
+  MPEG_ABS::SAMPLING_FREQUENCY_LOW  => array (
+    MPEG_ABS::LAYER_ONE   => array (
+      32 => 0, 48 => 0, 56 => 0, 64 => 0, 80 => 0, 96 => 0, 112 => 0, 128 => 0,
+      144 => 0, 160 => 0, 176 => 0, 192 => 0, 224 => 0, 256 => 0),
+    MPEG_ABS::LAYER_TWO   => array (
+      8 => 0, 16 => 0, 24 => 0, 32 => 0, 40 => 0, 48 => 0, 56 => 0, 64 => 0,
+      80 => 0, 96 => 0, 112 => 0, 128 => 0, 144 => 0, 160 => 0),
+    MPEG_ABS::LAYER_THREE => array (
+      8 => 0, 16 => 0, 24 => 0, 32 => 0, 40 => 0, 48 => 0, 56 => 0, 64 => 0,
+      80 => 0, 96 => 0, 112 => 0, 128 => 0, 144 => 0, 160 => 0)
+  )
+);
+
+$frames = $abs->frames;
+$frameCount = count($frames);
+
+foreach ($frames as $frame)
+  $bitrates[$frame->frequencyType][$frame->layer][$frame->bitrate]++;
+
+
+/* Determine necessary min/max values */
+$maxFrames = ceil
+  (($maxFrames = max($bitrates[$frame->frequencyType][$frame->layer])) *
+   ($factor = pow(10, 1 - strlen((string)$maxFrames)))) / $factor;
+$minBitrate = min(array_keys($bitrates[$frame->frequencyType][$frame->layer]));
+$maxBitrate = max(array_keys($bitrates[$frame->frequencyType][$frame->layer]));
+}}}
+
+Please note that we only use one section of the bitrate array, one with the sampling frequency and the layer matching the audio file we loop through. Using the collected bitrate information it is quite simple and straight forward to graph the results as shown below.
+
+{{{
+/* Generage Google Charts API URL */
+$chart = "http://chart.apis.google.com/chart?";
+
+// Chart settings
+$chart .= "cht=bhs&chs=800x375&chco=76a4fb&chbh=a,4&";
+
+// Chart data
+$chart .= "chd=t:" . implode
+  (",", array_reverse
+   (array_values($bitrates[$frame->frequencyType][$frame->layer]))) .
+  "&chds=1," . $maxFrames . "&";
+
+// Chart title
+$chart .= "chtt=Bitrate+Distribution+Graph&chts=808080,20&";
+
+// Chart axis
+$chart .= "chxt=x,y,x,y&chxl=1:|" . implode
+  ("|", array_keys($bitrates[$frame->frequencyType][$frame->layer])) .
+  "|2:|Frames|3:|Bit+Rate&chxr=0,0," . $maxFrames ."|1,0," . $maxBitrate .
+  "&chm=N*f0*+frame(s),505050,0,-1,13&";
+
+// Chart margins
+$chart .= "chma=10,10,10,10";
+
+
+/* Print chart image */
+echo "<img src=\"$chart\"/>";
+}}}
+
+Thanks to the developers at Google, the above code will result to a very impressive graph showing the bitrate distribution.
+
+http://php-reader.googlegroups.com/web/reader.chart.mpeg_abs-a.png
+
+To continue this idea just a bit further and with only a small amount of extra work we can also graph the bitrates of the whole file.
+
+Well, almost. An audio file may contain tens or hundreds of thousands of frames, so we cannot graph all of them. What we can do, is to determine a suitable interval to use to pick frames from the audio file and graph them. The following code snippet shows how to do this.
+
+{{{
+/* Generage Google Charts API URL */
+$chart = "http://chart.apis.google.com/chart?";
+
+// Chart settings
+$chart .= "cht=lc&chs=800x375&chco=76a4fb&chls=2.0&";
+
+// Chart data
+$enc = "s:";
+$encSource = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+$n = round($frameCount / 800);
+for ($i = 0, $j = 0; $i < $frameCount; $i++, $j++) {
+  if ($j == $n) {
+    $enc .= $encSource[round(61 * $frames[$i]->bitrate / $maxBitrate)];
+    $j = 0;
+  }
+}
+$chart .= "chd=$enc&chds=0," . $maxBitrate . "&";
+
+// Chart title
+$chart .= "chtt=Bitrate+Graph&chts=808080,20&";
+
+// Chart axis
+$chart .= "chxt=x,y,r,x,y&chxl=1:|0|" .
+  implode("|", array_keys($bitrates[$frame->frequencyType][$frame->layer])) .
+  "|2:|min|average|max|3:|Frames|4:|Bit+Rate&chxr=0,0," . $frameCount .
+  "|1,0," . $maxBitrate . "|2,0," . $maxBitrate . "&chxp=1,0," .
+  implode(",", array_keys($bitrates[$frame->frequencyType][$frame->layer])) .
+  "|2," . $minBitrate . "," . $abs->bitrate . "," . $maxBitrate .
+  "&chxs=2,505050,13,-1,t,bb0000&chxtc=2,-1000&";
+
+// Chart margins
+$chart .= "chma=10,10,10,10";
+
+
+/* Print chart image */
+echo "<img src=\"$chart\"/>";
+}}}
+
+The result is shown below.
+
+http://php-reader.googlegroups.com/web/reader.chart.mpeg_abs-b.png
+
 See the class documentation found in the source package for the documentation for all the classes and their methods.
