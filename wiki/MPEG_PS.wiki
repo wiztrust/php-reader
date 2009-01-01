@@ -19,7 +19,7 @@ The current implementation supports only parsing of the play duration.
   * [ASF] Class
   * [ID3v1] Class
   * [ID3v2] Class
-  * [MPEG_Audio] Class
+  * [MPEG_ABS] Class
   * *`MPEG_PS` Class*
   * [ISO14496] Class
   * [Magic] Class
