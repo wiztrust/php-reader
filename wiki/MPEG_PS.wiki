@@ -7,7 +7,9 @@ By [http://code.google.com/u/svollbehr/ svollbehr]
 ==Introduction==
 The `MPEG_PS` class provides partial implementation of the MPEG Program Stream defined in MPEG-1 Systems (ISO/IEC 11172-1) and MPEG-2 Systems (ISO/IEC 13818-1) standards.
 
-Program streams are used in MPEG video files, and DVD video discs and HD DVD video discs.
+http://php-reader.googlegroups.com/web/reader.aux.mpeg-explained.png
+
+Program streams are used in MPEG video files, DVD video discs and HD DVD video discs.
 
 The current implementation supports only parsing of the play duration.
 
