@@ -30,7 +30,7 @@ The ISO Base Media File Format is a base format for media file formats such as A
 
 http://php-reader.googlegroups.com/web/reader.classdiagram.iso1449.png
 
-  * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
+  * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/ or [http://php-reader.googlecode.com/svn/docs/index.html online here]
   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ISO14496.php
   * _Requirements:_
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
@@ -377,4 +377,4 @@ $isom = new ISO14496("file.(m4a|mp4|..)", array("base" => "moov.udta.meta.id32")
 }}}
 
 
-See the class documentation found in the source package for the documentation for all the available boxes and their methods.
+See the class documentation found in the source package for the documentation for all the available boxes and their methods. Also, leave a comment if you come up with an idea for an example that would be nice to have added here!

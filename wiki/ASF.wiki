@@ -30,7 +30,7 @@ The Advanced Systems Format is a base format for media file formats such as Micr
 
 http://php-reader.googlegroups.com/web/reader.classdiagram.asf.png
 
-  * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
+  * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/ or [http://php-reader.googlecode.com/svn/docs/index.html online here]
   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ASF.php
   * _Requirements:_
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
@@ -207,4 +207,41 @@ if (isset($asf->header->extendedContentDescription)) {
 }
 }}}
 
-See the class documentation found in the source package for the documentation for all the available objects and their methods.
+===Example #3: How to write ASF information===
+Writing to an ASF file is supported by design. Everything that one can fetch from the header can also be written back to the file. Only indices and data cannot be altered using this library.
+
+To write to an ASF file, one may simply create an instance of the class, assign needed values and commit the changes, as illustrated in the code below.
+
+{{{
+<?php
+require_once("ASF.php");
+
+$asf = new ASF("file.(asf|wma|wmv|..)");
+
+$asf->header->contentDescription->title = $asf->header->contentDescription->title . " by me!"; // append something to the title
+
+$asf->write();
+}}}
+
+When setting values, it is worthwhile to note that any object that does not already exist, is created and added to the file automatically when first accessed. This allows one to quickly assign values to fields that were not in the file when it is first read into memory. When you first access an object that does not exist, the object gets implicitly created and added to the collection.
+
+Using shorthands is much quicker way to perform simple tasks on the objects. Consider the following code, that does exactly the same as the previous example does not use shorthands.
+
+{{{
+<?php
+require_once("ASF.php");
+
+$asf = new ASF("file.(asf|wma|wmv|..)");
+
+if (!$asf->getHeader()->hasObject(ASF::CONTENT_DESCRIPTION))
+  $asf->getHeader()->addObject($object = new ASF_Object_ContentDescription());
+else
+  $object = $asf->getHeader()->getObjectsByIdentifier(ASF::CONTENT_DESCRIPTION)[0];
+$object->setTitle($object->getTitle() . " by me!"; // append something to the title
+
+$asf->write();
+}}}
+
+Content objects can be accessed within their parent object (or the ASF root class) instances. The object name must be given in camel case having the first letter in lower case.
+
+See the class documentation found in the source package for the documentation for all the available objects and their methods. Also, leave a comment if you come up with an idea for an example that would be nice to have added here!

@@ -24,7 +24,7 @@ By [http://code.google.com/u/wphilipw/ wphilipw], [http://code.google.com/u/svol
 
 http://php-reader.googlegroups.com/web/reader.classdiagram.id3v1.png
 
-  * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
+  * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/ or [http://php-reader.googlecode.com/svn/docs/index.html online here]
   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/ID3v1.php
   * _Requirements:_
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
@@ -94,4 +94,6 @@ $id3->track = 5;                           // uses ID3v1.1 when track is given
 $id3->write();
 }}}
 
-The `ID3v1` class will automatically determine which version of the tag format to use based on whether you set a track or not. See the class documentation found in the source package for the documentation for all the available tag fields.
+The `ID3v1` class will automatically determine which version of the tag format to use based on whether you set a track or not.
+ 
+See the class documentation found in the source package for the documentation for all the available tag fields. Also, leave a comment if you come up with an idea for an example that would be nice to have added here!

@@ -30,7 +30,7 @@ The current implementation supports only parsing of the play duration.
 
 http://php-reader.googlegroups.com/web/reader.classdiagram.mpeg_ps.png
 
-  * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
+  * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/ or [http://php-reader.googlecode.com/svn/docs/index.html online here]
   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/MPEG/PS.php
   * _Requirements:_
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
@@ -59,4 +59,4 @@ echo "Exact play duration in seconds is " . $length . " or " . $output . "\n";
 
 The above example prints the file play duration in seconds as well as in the form of (hours:)minutes:seconds.milliseconds.
 
-See the class documentation found in the source package for the documentation for all the classes and their methods.
+See the class documentation found in the source package for the documentation for all the classes and their methods. Also, leave a comment if you come up with an idea for an example that would be nice to have added here!

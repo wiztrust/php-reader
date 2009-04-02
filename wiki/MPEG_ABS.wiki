@@ -36,7 +36,7 @@ The class is capable of only reading bit stream information. Furthermore, the cl
 
 http://php-reader.googlegroups.com/web/reader.classdiagram.mpeg_abs.png
 
-  * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/
+  * _Documentation location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/docs/ or [http://php-reader.googlecode.com/svn/docs/index.html online here]
   * _Source location:_ <[http://code.google.com/p/php-reader/downloads/list package]>/src/MPEG/ABS.php
   * _Requirements:_
     * <[http://code.google.com/p/php-reader/downloads/list package]>/src/Reader.php
@@ -276,4 +276,4 @@ The result is shown below.
 
 http://php-reader.googlegroups.com/web/reader.chart.mpeg_abs-b.png
 
-See the class documentation found in the source package for the documentation for all the classes and their methods.
+See the class documentation found in the source package for the documentation for all the classes and their methods. Also, leave a comment if you come up with an idea for an example that would be nice to have added here!
