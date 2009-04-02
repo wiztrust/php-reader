@@ -31,12 +31,13 @@
 <p class="description"><p>This object supports the same types of metadata as the  <em><a href="php-reader/ASF/ASF_Object_Metadata.html">Metadata Object</a></em>, as well as attributes  with language IDs, attributes that are defined more than once, large  attributes, and attributes with the GUID data type.</p></p>
 	<ul class="tags">
 				<li><span class="field">author:</span> Sven Vollbehr &lt;<a href="mailto:svollbehr@gmail.com">svollbehr@gmail.com</a>&gt;</li>
-				<li><span class="field">version:</span> $Rev: 139 $</li>
+				<li><span class="field">version:</span> $Rev: 145 $</li>
 				<li><span class="field">copyright:</span> Copyright (c) 2008-2009 The PHP Reader Project Workgroup</li>
+				<li><span class="field">todo:</span> Implement better handling of various types of attributes              according to http://msdn.microsoft.com/en-us/library/aa384495(VS.85).aspx</li>
 				<li><span class="field">license:</span> <a href="http://code.google.com/p/php-reader/wiki/License">New BSD License</a></li>
 			</ul>
 		<p class="notes">
-			Located in <a class="field" href="php-reader/ASF/_ASF---Object---MetadataLibrary.php.html">/ASF/Object/MetadataLibrary.php</a> (line <span class="field">60</span>)
+			Located in <a class="field" href="php-reader/ASF/_ASF---Object---MetadataLibrary.php.html">/ASF/Object/MetadataLibrary.php</a> (line <span class="field">62</span>)
 		</p>
 		
 				
@@ -153,7 +154,7 @@
 	
 	<div class="method-header">
 		<img src="images/Constructor.png" />
-		<span class="method-title">Constructor __construct</span> (line <span class="line-number">72</span>)
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">74</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -195,7 +196,7 @@
 	
 	<div class="method-header">
 		<img src="images/Method.png" />
-		<span class="method-title">getDescriptionRecords</span> (line <span class="line-number">141</span>)
+		<span class="method-title">getDescriptionRecords</span> (line <span class="line-number">143</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -222,7 +223,7 @@
 	
 	<div class="method-header">
 		<img src="images/Method.png" />
-		<span class="method-title">isMandatory</span> (line <span class="line-number">175</span>)
+		<span class="method-title">isMandatory</span> (line <span class="line-number">177</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -253,7 +254,7 @@
 	
 	<div class="method-header">
 		<img src="images/Method.png" />
-		<span class="method-title">isMultiple</span> (line <span class="line-number">183</span>)
+		<span class="method-title">isMultiple</span> (line <span class="line-number">185</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -284,7 +285,7 @@
 	
 	<div class="method-header">
 		<img src="images/Method.png" />
-		<span class="method-title">setDescriptionRecords</span> (line <span class="line-number">164</span>)
+		<span class="method-title">setDescriptionRecords</span> (line <span class="line-number">166</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -318,7 +319,7 @@
 	
 	<div class="method-header">
 		<img src="images/Method.png" />
-		<span class="method-title">__toString</span> (line <span class="line-number">190</span>)
+		<span class="method-title">__toString</span> (line <span class="line-number">192</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -546,7 +547,7 @@
 	</div>
 	
 	<p class="notes" id="credit">
-		Documentation generated on Fri, 20 Feb 2009 21:17:23 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.2</a>
+		Documentation generated on Thu, 02 Apr 2009 20:07:22 +0300 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.2</a>
 	</p>
 	</div></body>
 </html>

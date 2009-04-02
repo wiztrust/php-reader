@@ -3667,23 +3667,7 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="php-reader/Transform.html#methodfromString16">Transform::fromString16()</a> in Transform.php</div>
-							<div class="index-item-description">Returns UTF-16 formatted binary data as machine-ordered multibyte string.</div>
-					</dd>
-			<dt class="field">
-						<img src="images/Method.png" alt="Method" title="Method" /></title>
-			<span class="method-title">fromString16BE</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="php-reader/Transform.html#methodfromString16BE">Transform::fromString16BE()</a> in Transform.php</div>
-							<div class="index-item-description">Returns big-endian ordered binary data as machine ordered multibyte string.</div>
-					</dd>
-			<dt class="field">
-						<img src="images/Method.png" alt="Method" title="Method" /></title>
-			<span class="method-title">fromString16LE</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="php-reader/Transform.html#methodfromString16LE">Transform::fromString16LE()</a> in Transform.php</div>
-							<div class="index-item-description">Returns little-endian ordered binary data as machine ordered multibyte  string. Removes terminating zero.</div>
+							<div class="index-item-description">Returns binary data as multibyte Unicode string. Removes terminating zero.</div>
 					</dd>
 			<dt class="field">
 						<img src="images/Method.png" alt="Method" title="Method" /></title>
@@ -13039,7 +13023,7 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="php-reader/Transform.html#methodtoString8">Transform::toString8()</a> in Transform.php</div>
-							<div class="index-item-description">Returns string as binary data padded to given length with zeros.</div>
+							<div class="index-item-description">Returns string as binary data padded to given length with zeros. If length  is smaller than the length of the string, it is considered as the length of  the padding.</div>
 					</dd>
 			<dt class="field">
 						<img src="images/Method.png" alt="Method" title="Method" /></title>
@@ -13047,23 +13031,7 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="php-reader/Transform.html#methodtoString16">Transform::toString16()</a> in Transform.php</div>
-							<div class="index-item-description">Returns machine-ordered multibyte string as UTF-16 defined-order binary  data. The byte order is stored using a byte order mask (BOM) in the binary  data string.</div>
-					</dd>
-			<dt class="field">
-						<img src="images/Method.png" alt="Method" title="Method" /></title>
-			<span class="method-title">toString16BE</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="php-reader/Transform.html#methodtoString16BE">Transform::toString16BE()</a> in Transform.php</div>
-							<div class="index-item-description">Returns machine ordered multibyte string as big-endian ordered binary data.</div>
-					</dd>
-			<dt class="field">
-						<img src="images/Method.png" alt="Method" title="Method" /></title>
-			<span class="method-title">toString16LE</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="php-reader/Transform.html#methodtoString16LE">Transform::toString16LE()</a> in Transform.php</div>
-							<div class="index-item-description">Returns machine-ordered multibyte string as little-endian ordered binary  data.</div>
+							<div class="index-item-description">Returns the multibyte string as binary data with given byte order mark</div>
 					</dd>
 			<dt class="field">
 						<img src="images/Method.png" alt="Method" title="Method" /></title>
