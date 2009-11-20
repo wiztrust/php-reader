@@ -181,7 +181,7 @@ require_once("ID3v2.php");
 
 $id3 = new ID3v2("file.mp3");
 header("Content-Type: " . $id3->apic->mimeType);
-echo $id3->apic->data;
+echo $id3->apic->imageData;
 }}}
 
 No harder than that!
